@@ -20,10 +20,15 @@ const websiteRouter = require('./routes/website');
 const websitesListRouter = require('./routes/websites');
 const initRouter = require('./routes/init');
 
+const webpageRouter = require('./routes/webpage');
+const webpagesListRouter = require('./routes/webpages');
+
 app.use(express.json());
 app.use('/website', websiteRouter);
 app.use('/websites', websitesListRouter);
 app.use('/init', initRouter);
+app.use('/webpage', webpageRouter);
+app.use('/webpages', webpagesListRouter);
 
 /* GET home page. */
 app.get('/', (req, res) => {

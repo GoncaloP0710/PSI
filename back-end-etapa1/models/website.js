@@ -11,6 +11,7 @@ const websiteSchema = new Schema({
   },
   dataDeRegisto: { type: Date, default: Date.now },
   dataDaUltimaAvaliacao: { type: Date },
+  webpages: [{ type: Schema.Types.ObjectId, ref: "Webpage", required: false }],
 });
 
 // Export model

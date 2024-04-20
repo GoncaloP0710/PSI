@@ -6,4 +6,6 @@ router.get("/:id", website_controller.get_website);
 router.post('/', website_controller.create_website);
 router.delete('/:id', website_controller.delete_website);
 
+router.post('/:id/webpages', website_controller.add_webpage);
+
 module.exports = router;
