@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Website = require("../models/website");
 const Webpage = require('../models/webpage');
 const { body, validationResult } = require("express-validator");
+const URL = require('url').URL;
 
 exports.get_website = asyncHandler(async (req, res, next) => {
     try {
@@ -19,6 +20,13 @@ exports.create_website = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (errors.isEmpty()) {
+            // Check if a website with the same URL already exists
+            const existingWebsite = await Website.findOne({ url: req.body.url }).exec();
+            if (existingWebsite) {
+                res.status(400).send('A website with this URL already exists');
+                return;
+            }
+
             const websiteDetails = { 
                 url: req.body.url, 
                 avaliacao: 'Por avaliar', 
@@ -49,8 +57,15 @@ exports.add_webpage = asyncHandler(async (req, res, next) => {
         // Find the webpage by ID from the request body
         const webpage = await Webpage.findById(req.body.webpageId).exec();
 
-        console.log(website);
-        console.log(webpage);
+        // Parse the URLs
+        const websiteUrl = new URL(website.url);
+        const webpageUrl = new URL(webpage.url);
+
+        // Check if the webpage URL belongs to the website URL
+        if (websiteUrl.hostname !== webpageUrl.hostname) {
+            res.status(400).send('The webpage URL does not belong to the website URL');
+            return;
+        }
 
         // Check if the webpage already exists in the website's webpages array
         if (!website.webpages.includes(webpage._id)) {
