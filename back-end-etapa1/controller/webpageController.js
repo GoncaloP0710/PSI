@@ -1,5 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Webpage = require("../models/webpage");
+const Website = require('../models/website'); // Add this line
+
 const { body, validationResult } = require("express-validator");
 
 exports.get_webpage = asyncHandler(async (req, res, next) => {
@@ -30,9 +32,26 @@ exports.create_webpage = [
 
 exports.delete_webpage = asyncHandler(async (req, res, next) => {
     try {
-        await Webpage.findByIdAndDelete(req.params.id);
-        return;
-    } catch {
+        const webpageId = req.params.id;
+
+        // Find all websites that contain the webpage
+        const websites = await Website.find({ webpages: webpageId }).exec();
+
+        // Update each website to remove the webpage
+        for (const website of websites) {
+            const index = website.webpages.indexOf(webpageId);
+            if (index > -1) {
+                website.webpages.splice(index, 1);
+                await website.save();
+            }
+        }
+
+        // Delete the webpage
+        await Webpage.findByIdAndDelete(webpageId);
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
         res.sendStatus(404);
     }
 });

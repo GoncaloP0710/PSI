@@ -22,3 +22,15 @@ exports.websites_by_avaliacao_get = asyncHandler(async (req, res, next) => {
         res.sendStatus(404);
     }
 });
+
+exports.websites_list_get_ordered = asyncHandler(async (req, res, next) => {
+    try {
+        const sortField = req.query.sortField || 'dataDeRegisto';
+        const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
+
+        const websites = await Website.find().sort({ [sortField]: sortOrder }).exec();
+        res.json(websites);
+    } catch {
+        res.json([]);
+    }
+});

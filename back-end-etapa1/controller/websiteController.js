@@ -68,3 +68,25 @@ exports.add_webpage = asyncHandler(async (req, res, next) => {
         res.sendStatus(404);
     }
 });
+
+exports.update_avaliacao = asyncHandler(async (req, res, next) => {
+    try {
+        const websiteId = req.params.id;
+        const newAvaliacao = req.body.avaliacao;
+
+        const website = await Website.findByIdAndUpdate(
+            websiteId, 
+            { 
+                avaliacao: newAvaliacao, 
+                dataDaUltimaAvaliacao: Date.now() 
+            }, 
+            { new: true }
+        ).exec();
+
+        res.json(website);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(404);
+    }
+});
+
