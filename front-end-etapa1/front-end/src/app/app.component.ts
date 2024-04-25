@@ -1,23 +1,16 @@
 import { Component, AfterViewInit, ViewChildren, ElementRef, QueryList } from '@angular/core';
-import {MDCRipple} from '@material/ripple';
-
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatButtonModule} from '@angular/material/button';
 
 
 @Component({
-  selector: 'mat-divider',
+  selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.css'],
+  styleUrls: ['app.component.css','theme.scss'],
 })
 
-export class AppComponent implements AfterViewInit {
+export class AppComponent{
   title = 'front-end';
 
   @ViewChildren('mdcButton', { read: ElementRef }) mdcButtons!: QueryList<ElementRef>;
 
-  ngAfterViewInit() {
-    this.mdcButtons.forEach(button => new MDCRipple(button.nativeElement));
-  }
+
 }
