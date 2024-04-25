@@ -1,19 +1,3 @@
-<p>websites works!</p>
-
-
-<section>
-    <div class="example-label">Basic</div>
-    <div class="example-button-row">
-      <button mat-button>Basic</button>
-      <button mat-button color="primary">Primary</button>
-      <button mat-button color="accent">Accent</button>
-      <button mat-button color="warn">Warn</button>
-      <button mat-button disabled>Disabled</button>
-      <a mat-button href="https://www.google.com/" target="_blank">Link</a>
-    </div>
-  </section>
-  <mat-divider></mat-divider>
-
 <section>
 <form class="example-form">
   <mat-form-field class="example-full-width">
@@ -26,34 +10,17 @@
     <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
  </section>
  <mat-divider></mat-divider>
- <section>
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
 
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let row"> {{row._id}} </td>
-      </ng-container>
-    
-      <!-- URL Column -->
-      <ng-container matColumnDef="url">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> URL </th>
-        <td mat-cell *matCellDef="let row"> {{row.url}} </td>
-      </ng-container>
-    
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.avaliacao}} </td>
-      </ng-container>
-    
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25]" aria-label="Select page of users"></mat-paginator>
-  </div>
- </section>
+
+ <ul class="websites">
+  <mat-list *ngFor="let website of websites">
+    <a routerLink="/detail/{{website._id}}">
+      <span class="badge">{{website.url}}</span> Data de Registo: {{website.dataDeRegisto}} 
+      Data da ultima aval: {{website.dataDaUltimaAvaliacao}} 
+      Avaliacao:  {{website.avaliacao}} 
+    </a> 
+  </mat-list>
+</ul>
 
 
 

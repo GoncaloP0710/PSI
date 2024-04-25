@@ -24,7 +24,7 @@ export class WebsiteService {
   getWebsites(): Observable<Website[]> {
     return this.http.get<Website[]>(this.websitesUrl)
       .pipe(
-        tap(),
+        tap(websites => console.log('Fetched websites:', websites)),
         catchError(this.handleError<Website[]>('getWebsites', []))
       );
   }

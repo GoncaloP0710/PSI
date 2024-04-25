@@ -1,10 +1,23 @@
-<p>webpages works!</p>
-<!-- 
 <mat-divider></mat-divider>
 
 <section>
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+  <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher"
+  placeholder="Ex. http://www.exemplo.com">
+    <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">Please enter a valid URL</mat-error>
+    <mat-error *ngIf="urlFormControl.hasError('required')">URL is <strong>required</strong></mat-error>
+  </mat-form-field>
+</form>
+    <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
+ </section>
+ <mat-divider></mat-divider>
 
-  <input type="url" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
-  placeholder="Ex. http://www.sitepreferido.com">
-  <button mat-button ></button>
- </section> -->
+
+ <ul class="webpages">
+  <mat-list *ngFor="let webpage of webpages">
+    <a routerLink="/detail/{{webpage._id}}">
+      <span class="badge">{{webpage.url}}</span>
+    </a>
+  </mat-list>
+</ul>

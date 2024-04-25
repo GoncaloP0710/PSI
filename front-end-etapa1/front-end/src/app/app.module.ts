@@ -22,10 +22,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatListModule } from '@angular/material/list';
+
 
 
 const routes: Routes = [
   { path: 'websites', component: WebsitesComponent },
+  { path: 'webpages', component: WebpagesComponent },
   { path: '', redirectTo: '/websites', pathMatch: 'full' }
 ];
 
@@ -51,6 +54,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatPaginatorModule,
     MatTableModule,
+    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

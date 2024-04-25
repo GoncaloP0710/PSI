@@ -16,17 +16,8 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 export class WebsitesComponent implements OnInit {
 
-  websites: Website[] = [];
+  websites!: Website[];
   url: string = '';
-  displayedColumns: string[] = ['id', 'url', 'avaliacao'];
-
-  dataSource = new MatTableDataSource<Website>();
-
-
-
-  @ViewChild(MatSort) sort: MatSort  = new MatSort();
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
 
   urlFormControl = new FormControl('', [
     Validators.required,
@@ -35,22 +26,26 @@ export class WebsitesComponent implements OnInit {
 
   matcher = new ErrorStateMatcher();
 
-
   constructor(private websiteService: WebsiteService) { }
 
   ngOnInit(): void {
     this.getWebsites();
-    console.log(this.websites);
+    console.log("websites na memoria: " + this.websites);
   }
   
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  } 
 
   getWebsites(): void {
-    this.websiteService.getWebsites()
-    .subscribe(websites => this.websites = websites);
+    this.websiteService.getWebsites().subscribe(
+      websites => {
+        console.log('Websites fetched successfully:', websites);
+        this.websites = websites;
+      },
+      error => {
+        console.error('Error fetching websites:', error);
+      }
+    );
+    console.log("depois do fetch")
+    console.log("websites na memoria: " + this.websites);
   }
 
   add(url: string): void {
@@ -63,7 +58,6 @@ export class WebsitesComponent implements OnInit {
     } as Website)
     .subscribe(website => {
       this.websites.push(website);
-      this.dataSource.data = this.websites; // Update the dataSource
     });
   }
 

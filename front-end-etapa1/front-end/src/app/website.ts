@@ -1,4 +1,4 @@
-import { WebPage } from './webpage';
+import { Webpage } from './webpage';
 
 export interface Website {
     _id: string;
@@ -6,7 +6,7 @@ export interface Website {
     avaliacao: AvaliacaoStatus;
     dataDeRegisto: Date;
     dataDaUltimaAvaliacao: Date;
-    webpages: WebPage[];
+    webpages: Webpage[];
 }
 
 export enum AvaliacaoStatus {

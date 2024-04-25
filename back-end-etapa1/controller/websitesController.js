@@ -3,7 +3,7 @@ const Website = require('../models/website');
 
 exports.websites_list_get = asyncHandler(async (req, res, next) => {
     try {
-        const websites = await Website.find().exec();
+        const websites = await Website.find().populate('webpages').exec();
         res.json(websites);
     } catch {
         res.json([]);
