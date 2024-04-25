@@ -1,28 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WebsiteService } from '../website.service';
 import { Website, AvaliacaoStatus } from '../website';
-
+import { FormControl, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-websites',
   templateUrl: './websites.component.html',
   styleUrls: ['./websites.component.css']
+  
 })
+
 export class WebsitesComponent implements OnInit {
 
   websites: Website[] = [];
   url: string = '';
+  displayedColumns: string[] = ['id', 'url', 'avaliacao'];
 
-  
+  dataSource = new MatTableDataSource<Website>();
+
+
+
+  @ViewChild(MatSort) sort: MatSort  = new MatSort();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+
+  urlFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern('https?://.+')
+  ]);
+
+  matcher = new ErrorStateMatcher();
+
 
   constructor(private websiteService: WebsiteService) { }
 
   ngOnInit(): void {
     this.getWebsites();
+    console.log(this.websites);
   }
-
   
-  
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  } 
 
   getWebsites(): void {
     this.websiteService.getWebsites()
@@ -39,6 +63,7 @@ export class WebsitesComponent implements OnInit {
     } as Website)
     .subscribe(website => {
       this.websites.push(website);
+      this.dataSource.data = this.websites; // Update the dataSource
     });
   }
 
@@ -47,15 +72,6 @@ export class WebsitesComponent implements OnInit {
     this.websiteService.deleteWebsite(website._id).subscribe();
   }
 
-  isUrlValid(url: string): boolean {
-    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?'+ // port
-      '(\\/[-a-z\\d%_.~+]*)*'+ // path
-      '(\\?[;&amp;a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(url);
-  }
+  
   
 }

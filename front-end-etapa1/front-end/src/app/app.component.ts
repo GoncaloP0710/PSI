@@ -1,16 +1,22 @@
-import { Component, AfterViewInit, ViewChildren, ElementRef, QueryList } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.css','theme.scss'],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 
 export class AppComponent{
   title = 'front-end';
 
-  @ViewChildren('mdcButton', { read: ElementRef }) mdcButtons!: QueryList<ElementRef>;
+  emailFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern('https?://.+')
+  ]);
 
+  matcher = new ErrorStateMatcher();
 
 }

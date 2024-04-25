@@ -1,32 +1,20 @@
-
-section {
-  display: table;
+h1 {
+  margin-bottom: 0;
+}
+nav a {
+  padding: 1rem;
+  text-decoration: none;
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #e8e8e8;
+  color: #3d3d3d;
+  border-radius: 4px;
 }
 
-.example-label {
-  display: table-cell;
-  font-size: 14px;
-  margin-left: 8px;
-  min-width: 120px;
+nav a:hover {
+  color: white;
+  background-color: #42545C;
 }
-
-.example-button-row {
-  display: table-cell;
-  max-width: 600px;
-}
-
-.example-button-row .mat-mdc-button-base {
-  margin: 8px 8px 8px 0;
-}
-
-.example-flex-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.example-button-container {
-  display: flex;
-  justify-content: center;
-  width: 120px;
+nav a:active {
+  background-color: black;
 }

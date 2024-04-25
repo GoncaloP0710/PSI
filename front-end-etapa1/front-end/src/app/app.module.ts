@@ -1,19 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { WebsitesComponent } from './websites/websites.component';
 
 import { HttpClientModule } from '@angular/common/http';
-import { WebsiteDetailComponent } from './website-detail/website-detail.component';
+import { WebsitesDetailComponent } from './websites-detail/websites-detail.component';
 import { WebpagesComponent } from './webpages/webpages.component';
-import { WebpageDetailComponent } from './webpage-detail/webpage-detail.component';
+import { WebpagesDetailComponent } from './webpages-detail/webpages-detail.component';
 
-import { MatDividerModule } from '@angular/material/divider';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 
 const routes: Routes = [
@@ -25,9 +33,9 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     WebsitesComponent,
-    WebsiteDetailComponent,
+    WebsitesDetailComponent,
     WebpagesComponent,
-    WebpageDetailComponent,
+    WebpagesDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -35,8 +43,14 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HttpClientModule,
     MatDividerModule,
+    MatIconModule,
     MatButtonModule,
-    MatIconModule
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<head ></head>
-<body>
-  <button #mdcButton class="mdc-button mdc-button--outlined" routerLink="/websites">Websites</button>
-  <button #mdcButton class="mdc-button mdc-button--outlined" routerLink="/view2">View 2</button>
-  <button #mdcButton class="mdc-button mdc-button--outlined" routerLink="/view3">View 3</button>
+<h1>{{title}}</h1>
+
+<button mat-button routerLink="/websites">Websites</button>
+<button mat-button routerLink="/view2">View 2</button>
+<button mat-button routerLink="/view3">View 3</button>
 
 
-  <section>
-    <div class="example-label">Stroked</div>
-    <div class="example-button-row">
-      <button mat-stroked-button>Basic</button>
-      <button mat-stroked-button color="primary">Primary</button>
-      <button mat-stroked-button color="accent">Accent</button>
-      <button mat-stroked-button color="warn">Warn</button>
-      <button mat-stroked-button disabled>Disabled</button>
-      <a mat-stroked-button href="https://www.google.com/" target="_blank">Link</a>
-    </div>
-  </section>
-  <mat-divider></mat-divider>
-</body>
+
+<router-outlet></router-outlet>
