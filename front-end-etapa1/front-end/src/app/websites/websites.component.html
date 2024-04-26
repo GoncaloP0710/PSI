@@ -1,3 +1,4 @@
+<h1>Websites</h1>
 <section>
 <form class="example-form">
   <mat-form-field class="example-full-width">
@@ -11,21 +12,32 @@
  </section>
  <mat-divider></mat-divider>
 
+ <mat-button-toggle (click)="getWebsites()" value="">Mostrar todos</mat-button-toggle>
+ 
+ <mat-select [formControl]="avalFormControl" (selectionChange)="getWebsitesByAvaliacao($event.value)">
+  <mat-option *ngFor="let aval of avaliacao" [value]="aval">{{aval}}</mat-option>
+ </mat-select>
+
+ <p>Ordenar</p>
+ <mat-button-toggle-group  name="fontStyle" aria-label="Font Style">
+  <mat-button-toggle (click)="getWebsitesOrdered('dataDeRegisto')" value="dataDeRegisto">Data de Registo</mat-button-toggle>
+  <mat-button-toggle (click)="getWebsitesOrdered('dataDaUltimaAvaliacao')" value="dataDaUltimaAvaliacao">Data de Avaliacao</mat-button-toggle>
+</mat-button-toggle-group>
+
+
+<!-- 
+  ['Por avaliar', 'Em avaliação', 'Avaliado', 'Erro na avaliação']
+ -->
 
  <ul class="websites">
   <mat-list *ngFor="let website of websites">
-    <a routerLink="/detail/{{website._id}}">
+    <a routerLink="/website/{{website._id}}">
       <span class="badge">{{website.url}}</span> Data de Registo: {{website.dataDeRegisto}} 
       Data da ultima aval: {{website.dataDaUltimaAvaliacao}} 
       Avaliacao:  {{website.avaliacao}} 
     </a> 
   </mat-list>
 </ul>
-
-
-
-
-  
   
 <!-- Copyright 2024 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that

@@ -23,13 +23,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatExpansionModule} from '@angular/material/expansion';
+
+
+
 
 
 
 const routes: Routes = [
   { path: 'websites', component: WebsitesComponent },
   { path: 'webpages', component: WebpagesComponent },
-  { path: '', redirectTo: '/websites', pathMatch: 'full' }
+  { path: '', redirectTo: '/websites', pathMatch: 'full' },
+  { path: 'webpage/:id', component: WebpagesDetailComponent},
+  { path: 'website/:id', component: WebsitesDetailComponent}
 ];
 
 @NgModule({
@@ -55,6 +63,9 @@ const routes: Routes = [
     MatPaginatorModule,
     MatTableModule,
     MatListModule,
+    MatSelectModule,
+    MatButtonToggleModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-<mat-divider></mat-divider>
+<h1>Webpages</h1>
 
 <section>
 <form class="example-form">
@@ -16,7 +16,7 @@
 
  <ul class="webpages">
   <mat-list *ngFor="let webpage of webpages">
-    <a routerLink="/detail/{{webpage._id}}">
+    <a routerLink="/webpage/{{webpage._id}}">
       <span class="badge">{{webpage.url}}</span>
     </a>
   </mat-list>

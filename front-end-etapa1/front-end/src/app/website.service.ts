@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -29,6 +29,24 @@ export class WebsiteService {
       );
   }
 
+  getOrderedWebsites(sortField: string, sortOrder: string): Observable<Website[]> {
+    const params = new HttpParams()
+      .set('sortField', sortField)
+      .set('sortOrder', sortOrder);
+  
+    const orderedWebsitesUrl = `${this.websitesUrl}/ordered`;
+    
+    return this.http.get<Website[]>(orderedWebsitesUrl, { params });
+  }
+
+  getWebsitesByAvaliacao(avaliacao: string): Observable<Website[]> {
+    const params = new HttpParams().set('avaliacao', avaliacao);
+    
+    const byAvaliacaoWebsitesUrl = `${this.websitesUrl}/byAvaliacao`;
+    
+    return this.http.get<Website[]>(byAvaliacaoWebsitesUrl, { params });
+  }
+
   /** GET website by id. Will 404 if id not found */
   getWebsite(id: string): Observable<Website> {
     const url = `${this.websiteUrl}/${id}`;
@@ -36,6 +54,13 @@ export class WebsiteService {
       tap(),
       catchError(this.handleError<Website>(`getWebsite id=${id}`))
     );
+  }
+
+  addWebpage(websiteId: string, webpageId: string): Observable<any> {
+    const url = `http://localhost:8000/website/${websiteId}/webpages`;
+    const body = { webpageId };
+  
+    return this.http.post(url, body);
   }
 
   /** POST: add a new website to the server */

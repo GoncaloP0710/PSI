@@ -1,1 +1,7 @@
-<p>webpages-detail works!</p>
+<h1>Detalhe da Webpages</h1>
+
+<mat-list>
+    <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
+  <mat-list-item role="listitem">Data da última avaliação: {{webpage.lastEvaluationDate?webpage.lastEvaluationDate:"Por avaliar"}}</mat-list-item>
+  <mat-list-item role="listitem">Compliant: {{webpage.isCompliant?"Sim":"Não"}}</mat-list-item>
+</mat-list>

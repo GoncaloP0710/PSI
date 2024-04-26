@@ -18,6 +18,11 @@ export class WebsitesComponent implements OnInit {
 
   websites!: Website[];
   url: string = '';
+  ascendente: boolean = false;
+
+  avalFormControl = new FormControl('');
+
+  avaliacao: string[] = ["Por avaliar", "Em avaliação", "Avaliado", "Erro na avaliação"];
 
   urlFormControl = new FormControl('', [
     Validators.required,
@@ -57,7 +62,7 @@ export class WebsitesComponent implements OnInit {
       dataDeRegisto: new Date() 
     } as Website)
     .subscribe(website => {
-      this.websites.push(website);
+      this.websites = [...this.websites, website];
     });
   }
 
@@ -66,6 +71,33 @@ export class WebsitesComponent implements OnInit {
     this.websiteService.deleteWebsite(website._id).subscribe();
   }
 
-  
-  
+  getWebsitesOrdered(sortField: string): void {
+    console.log("sortField: " + sortField);
+    let sortOrder: string;
+    if (this.ascendente) {
+      sortOrder = 'asc';
+      this.ascendente = false;
+    } else {
+      sortOrder = 'desc';
+      this.ascendente = true;
+    }
+    console.log("sortOrder: " + sortOrder);
+
+    this.websiteService.getOrderedWebsites(sortField, sortOrder)
+      .subscribe(
+        websites => {
+          this.websites = websites;
+          console.log('Websites ordered:', websites);
+          console.log(`Received ${websites.length} websites sorted by ${sortField} in ${sortOrder} order`);
+        },
+        error => {
+          console.error('Error occurred:', error);
+        }
+      );
+  }
+
+  getWebsitesByAvaliacao(avaliacao: string): void {
+    this.websiteService.getWebsitesByAvaliacao(avaliacao)
+      .subscribe(websites => this.websites = websites);
+  }
 }
