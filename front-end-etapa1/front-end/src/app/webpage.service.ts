@@ -10,8 +10,8 @@ export class WebpageService {
 
   
 
-  private webpageUrl = 'http://localhost:8000/webpage';
-  private webpagesUrl = 'http://localhost:8000/webpages';
+  private webpageUrl = 'http://localhost:3086/webpage';
+  private webpagesUrl = 'http://localhost:3086/webpages';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
