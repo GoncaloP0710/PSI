@@ -1,3 +1,5 @@
+
+
 <h1>Websites</h1>
 <section>
 <form class="example-form">
@@ -13,10 +15,17 @@
  <mat-divider></mat-divider>
 
  <mat-button-toggle (click)="getWebsites()" value="">Mostrar todos</mat-button-toggle>
- 
+<div class="avalSelect">
+<form>
+  <mat-form-field class="example-full-width">
+ <mat-label>Avaliação</mat-label>
  <mat-select [formControl]="avalFormControl" (selectionChange)="getWebsitesByAvaliacao($event.value)">
   <mat-option *ngFor="let aval of avaliacao" [value]="aval">{{aval}}</mat-option>
  </mat-select>
+</mat-form-field>
+</form>
+</div>
+
 
  <p>Ordenar</p>
  <mat-button-toggle-group  name="fontStyle" aria-label="Font Style">
@@ -30,15 +39,17 @@
  -->
 
  <ul class="websites">
-  <mat-list *ngFor="let website of websites">
+  <mat-list *ngFor="let website of websites" #sites>
     <a routerLink="/website/{{website._id}}">
-      <span class="badge">{{website.url}}</span> Data de Registo: {{website.dataDeRegisto}} 
-      Data da ultima aval: {{website.dataDaUltimaAvaliacao}} 
+    <span class="badge">{{website.url}}</span> </a>  Data de Registo: {{website.dataDeRegisto}} 
+      Data da ultima aval: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"Por avaliar"}} 
       Avaliacao:  {{website.avaliacao}} 
-    </a> 
+      <button mat-button (click)="delete(website)">Apagar</button>
   </mat-list>
+  
 </ul>
   
+
 <!-- Copyright 2024 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at {{'https://angular.io/license'}} -->

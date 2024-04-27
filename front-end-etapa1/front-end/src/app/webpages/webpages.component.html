@@ -19,5 +19,6 @@
     <a routerLink="/webpage/{{webpage._id}}">
       <span class="badge">{{webpage.url}}</span>
     </a>
+    <button mat-button (click)="delete(webpage)">Apagar</button>
   </mat-list>
 </ul>
