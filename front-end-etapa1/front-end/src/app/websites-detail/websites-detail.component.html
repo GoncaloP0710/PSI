@@ -1,11 +1,5 @@
 <h1>Detalhes de website</h1>
 
-<form class="example-form">
-<mat-select [formControl]="webpageControl">
-  <mat-option *ngFor="let webpage of webpages" [value]="webpage">{{webpage.url}}</mat-option>
-</mat-select>
-<button mat-button *ngIf="webpageControl.valid && webpageControl.value" (click)="addWebpageToWebsite(website._id, webpageControl.value)" value="">Adicionar </button>
-</form>
 <mat-list>
   <mat-list-item role="listitem">URL: {{website.url}}</mat-list-item>
     <mat-list-item role="listitem">Avaliacao: {{website.avaliacao}}</mat-list-item>
@@ -13,6 +7,13 @@
   <mat-list-item role="listitem">Data da última avaliação: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"-"}}</mat-list-item>
 </mat-list>
 <mat-divider></mat-divider>
+<h4>Webpages</h4>
+<form class="example-form">
+<mat-select [formControl]="webpageControl">
+  <mat-option *ngFor="let webpage of webpages" [value]="webpage">{{webpage.url}}</mat-option>
+</mat-select>
+<button mat-button *ngIf="webpageControl.valid && webpageControl.value" (click)="addWebpageToWebsite(website._id, webpageControl.value)" value="">Adicionar </button>
+</form>
 <mat-list *ngFor="let webpage of website.webpages">
     <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
 </mat-list>

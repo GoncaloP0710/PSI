@@ -1,6 +1,7 @@
 
 
 <h1>Websites</h1>
+<h3>Add website</h3>
 <section>
 <form class="example-form">
   <mat-form-field class="example-full-width">
@@ -10,9 +11,10 @@
     <mat-error *ngIf="urlFormControl.hasError('required')">URL is <strong>required</strong></mat-error>
   </mat-form-field>
 </form>
-    <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
+    <button class="adicionar" mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
  </section>
- <mat-divider></mat-divider>
+
+ <h3>Current websites</h3>
 
  <mat-button-toggle (click)="getWebsites()" value="">Mostrar todos</mat-button-toggle>
 <div class="avalSelect">

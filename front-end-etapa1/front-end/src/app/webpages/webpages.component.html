@@ -1,5 +1,6 @@
 <h1>Webpages</h1>
 
+<h3>Add webpage</h3>
 <section>
 <form class="example-form">
   <mat-form-field class="example-full-width">
@@ -9,16 +10,15 @@
     <mat-error *ngIf="urlFormControl.hasError('required')">URL is <strong>required</strong></mat-error>
   </mat-form-field>
 </form>
-    <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
+    <button class="adicionar" mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="add(urlFormControl.value)">Adicionar</button>
  </section>
- <mat-divider></mat-divider>
 
-
+<h3>Current webpages</h3>
  <ul class="webpages">
   <mat-list *ngFor="let webpage of webpages">
     <a routerLink="/webpage/{{webpage._id}}">
       <span class="badge">{{webpage.url}}</span>
     </a>
-    <button mat-button (click)="delete(webpage)">Apagar</button>
+    <button class="apagar" mat-button (click)="delete(webpage)">Apagar</button>
   </mat-list>
 </ul>
