@@ -2,6 +2,6 @@
 
 <mat-list>
     <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
-  <mat-list-item role="listitem">Data da última avaliação: {{webpage.lastEvaluationDate?webpage.lastEvaluationDate:"Por avaliar"}}</mat-list-item>
+  <mat-list-item role="listitem">Data da última avaliação: {{webpage.lastEvaluationDate?webpage.lastEvaluationDate:"-"}}</mat-list-item>
   <mat-list-item role="listitem">Conforme: {{webpage.isCompliant?"Sim":"Não"}}</mat-list-item>
 </mat-list>

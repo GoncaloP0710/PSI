@@ -42,7 +42,7 @@
   <mat-list *ngFor="let website of websites" #sites>
     <a routerLink="/website/{{website._id}}">
     <span class="badge">{{website.url}}</span> </a>  Data de Registo: {{website.dataDeRegisto}} 
-      Data da ultima aval: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"Por avaliar"}} 
+      Data da ultima aval: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"-"}} 
       Avaliacao:  {{website.avaliacao}} 
       <button mat-button (click)="delete(website)">Apagar</button>
   </mat-list>
