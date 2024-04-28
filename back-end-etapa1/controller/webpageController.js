@@ -20,6 +20,13 @@ exports.create_webpage = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (errors.isEmpty()) {
+            // Check if the URL is valid
+            try {
+                new URL(req.body.url);
+            } catch (error) {
+                res.status(400).send('Invalid URL');
+                return;
+            }
             // Check if a webpage with the same URL already exists
             const existingWebpage = await Webpage.findOne({ url: req.body.url }).exec();
             if (existingWebpage) {
