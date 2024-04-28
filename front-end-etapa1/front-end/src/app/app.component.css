@@ -18,3 +18,11 @@ nav a:hover {
 nav a:active {
   background-color: black;
 }
+
+button {
+  border-style: solid;
+  border-radius: 10px;
+  font-size: larger;
+  margin-right: 20px;
+  background-color: lightgray;
+}
