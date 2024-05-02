@@ -8,6 +8,8 @@
     "serverstart": "DEBUG=back-end-etapa1:* npm run devstart"
   },
   "dependencies": {
+    "@qualweb/core": "^0.7.70",
+    "@qualweb/wcag-techniques": "^0.3.18",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",

@@ -8,4 +8,6 @@ router.delete('/:id', website_controller.delete_website);
 router.post('/:id/webpages', website_controller.add_webpage);
 router.put('/:id/updateAvaliacao', website_controller.update_avaliacao);
 
+router.post('/evaluate', website_controller.evaluateAndSaveReports);
+
 module.exports = router;

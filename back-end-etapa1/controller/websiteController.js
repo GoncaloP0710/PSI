@@ -4,6 +4,12 @@ const Webpage = require('../models/webpage');
 const { body, validationResult } = require("express-validator");
 const URL = require('url').URL;
 
+const { QualWeb, generateEARLReport } = require('@qualweb/core');
+const fs = require('fs').promises;
+const fsp = require('fs');
+
+const path = require('path');
+
 exports.get_website = asyncHandler(async (req, res, next) => {
     try {
         const website = await Website.findById(req.params.id).populate('webpages').exec();
@@ -114,3 +120,121 @@ exports.update_avaliacao = asyncHandler(async (req, res, next) => {
     }
 });
 
+exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
+    const webpageIds = req.body.webpageIds; // assuming the webpage IDs are sent in the request body
+    const qualweb = new QualWeb();
+  
+    // Create the ./reports directory if it doesn't exist
+    await fs.mkdir('./reports', { recursive: true });
+  
+    var errorCounts = {};
+  
+    for (const webpageId of webpageIds) {
+      const webpage = await Webpage.findById(webpageId).exec();
+  
+      if (webpage) {
+
+        await qualweb.start();
+
+        const evaluation = await qualweb.evaluate({ url: webpage.url });
+
+        await qualweb.stop();
+  
+        const report = JSON.stringify(evaluation, null, 2);
+        const reportPath = `./reports/${webpageId}.json`;
+        await fs.writeFile(reportPath, report);
+  
+        errorCounts = countLevels(reportPath);
+      }
+    }
+
+    res.status(200).json({
+    success: true,
+    data: errorCounts
+    });
+});
+
+function countLevels(filename) {
+    const filePath = path.resolve(filename);
+    console.log(`Reading file: ${filePath}`);
+    try {
+        const data = fsp.readFileSync(filePath, 'utf8');
+        const json = JSON.parse(data);
+
+        var A = 0;
+        var AA = 0;
+        var AAA = 0;
+
+        var errorList = [];
+
+        var errorDictionary = {};
+
+        // Get the URL key from the JSON data
+        const urlKey = Object.keys(json)[0];
+        console.log(`URL key: ${urlKey}`);
+
+        const modules = json[urlKey].modules;
+
+        if (!modules) {
+            console.error('Invalid JSON data: "modules" does not exist');
+            return null;
+        }
+
+        for (const [moduleName, moduleValue] of Object.entries(modules)) {
+
+            if (moduleName!== "act-rules" && moduleName !== "wcag-techniques") {
+                console.log(`Skiping module: ${moduleName}`);
+                continue;
+            }
+            console.log(`Processing module: ${moduleName}`);
+
+            for (const [assertionKey, assertionValue] of Object.entries(moduleValue.assertions)) {
+
+                console.log(`Processing assertion: ${assertionKey}`);
+
+                const errorName = assertionValue.name;
+                console.log(`Error name: ${errorName}`);
+
+                const metadata = assertionValue.metadata;
+                const outcome = metadata.outcome;
+
+                if (outcome !== 'failed') {
+                    console.log('Outcome is not failed. Skipping...');
+                    continue;
+                }
+                errorList.push(errorName);
+
+                const successCriteria = metadata['success-criteria'];
+                for (const [criteriaKey, criteriaValue] of Object.entries(successCriteria)) {
+
+                    console.log(`Processing success criteria: ${criteriaValue.name}`);
+
+                    const level = criteriaValue.level;
+                    console.log(`Processing success criteria with level: ${level}`);
+
+                    if (!errorDictionary[errorName]) {
+                        errorDictionary[errorName] = { A: 0, AA: 0, AAA: 0 };
+                    }
+                    errorDictionary[errorName][level]++;
+
+                    if (level === 'A') {
+                        A++;
+                    } else if (level === 'AA') {
+                        AA++;
+                    } else if (level === 'AAA') {   
+                        AAA++;
+                    }
+                }
+            }
+        }
+
+        console.log('Finished processing JSON data.');
+        console.log(`Error list: ${errorList}`);
+        console.log(`A: ${A}, AA: ${AA}, AAA: ${AAA}`);
+        return errorDictionary;
+
+    } catch (err) {
+        console.error('An error occurred while trying to read the file:', err);
+        return null;
+    }
+}
