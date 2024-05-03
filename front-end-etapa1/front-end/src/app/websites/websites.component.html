@@ -7,7 +7,7 @@
   <mat-form-field class="example-full-width">
   <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher"
   placeholder="Ex. http://www.exemplo.com">
-    <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">Please enter a valid URL</mat-error>
+    <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">Please enter a valid URL (ex: http://www.exemplo.com)</mat-error>
     <mat-error *ngIf="urlFormControl.hasError('required')">URL is <strong>required</strong></mat-error>
   </mat-form-field>
 </form>
