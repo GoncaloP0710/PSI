@@ -94,3 +94,7 @@ mat-button-toggle-group {
   font-size: medium;
   padding:10px;
 }
+
+table {
+  width: 100%;
+}

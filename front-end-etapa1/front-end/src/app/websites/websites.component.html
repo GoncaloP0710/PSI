@@ -41,14 +41,39 @@
  -->
 
  <ul class="websites">
-  <mat-list *ngFor="let website of websites" #sites>
-    <a routerLink="/website/{{website._id}}">
-    <span class="badge">{{website.url}}</span> </a>  Data de Registo: {{website.dataDeRegisto}} 
-      Data da ultima aval: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"-"}} 
-      Avaliacao:  {{website.avaliacao}} 
-      <button mat-button (click)="delete(website)">Apagar</button>
-  </mat-list>
   
+  <table mat-table [dataSource]="websites" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- URL Column -->
+    <ng-container matColumnDef="URL">
+      <th mat-header-cell *matHeaderCellDef> URL </th>
+      <td mat-cell *matCellDef="let element"> {{element.url}} </td>
+    </ng-container>
+  
+    <!-- Data de Registo Column -->
+    <ng-container matColumnDef="Data de Registo">
+      <th mat-header-cell *matHeaderCellDef> Data de Registo </th>
+      <td mat-cell *matCellDef="let element"> {{element.dataDeRegisto}} </td>
+    </ng-container>
+  
+    <!-- Data de avaliacao Column -->
+    <ng-container matColumnDef="Data da ultima avaliação">
+      <th mat-header-cell *matHeaderCellDef> Data da ultima avaliação </th>
+      <td mat-cell *matCellDef="let element"> {{element.dataDaUltimaAvaliacao}} </td>
+    </ng-container>
+  
+    <!-- avaliacao Column -->
+    <ng-container matColumnDef="Avaliação">
+      <th mat-header-cell *matHeaderCellDef> Avaliação </th>
+      <td mat-cell *matCellDef="let element"> {{element.avaliacao}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </ul>
   
 
