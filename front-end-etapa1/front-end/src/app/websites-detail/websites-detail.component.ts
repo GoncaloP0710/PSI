@@ -23,7 +23,7 @@ export class WebsitesDetailComponent {
 
   urlFormControl = new FormControl('', [
     Validators.required,
-    Validators.pattern('https?://')
+    Validators.pattern('https?://.+')
   ]);
 
   matcher = new ErrorStateMatcher();
