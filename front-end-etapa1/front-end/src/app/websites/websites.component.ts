@@ -20,7 +20,7 @@ export class WebsitesComponent implements OnInit {
   url: string = '';
   ascendente: boolean = false;
 
-  displayedColumns: string[] = ['URL', "Data de Registo", 'Data da ultima avaliação', 'Avaliação'];
+  displayedColumns: string[] = ['URL', "Data de Registo", 'Data da ultima avaliação', 'Avaliação', "Detalhe"];
   avalFormControl = new FormControl('');
 
   avaliacao: string[] = ["Por avaliar", "Em avaliação", "Avaliado", "Erro na avaliação"];
