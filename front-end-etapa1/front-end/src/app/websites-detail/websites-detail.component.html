@@ -14,8 +14,9 @@
     placeholder="Ex. {{website.url}}/webpage">
       <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
       <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
+
   </mat-form-field>
-<button mat-button *ngIf="webpageControl.valid && webpageControl.value" (click)="addWebpageToWebsite(website._id, webpageControl.value)" value="">Adicionar </button>
+  <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
 </form>
 <mat-list *ngFor="let webpage of website.webpages">
     <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
