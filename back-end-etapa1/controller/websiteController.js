@@ -9,6 +9,7 @@ const fs = require('fs').promises;
 const fsp = require('fs');
 
 const path = require('path');
+const Errortest = require('../models/errortest');
 
 exports.get_website = asyncHandler(async (req, res, next) => {
     try {
@@ -127,8 +128,6 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
     // Create the ./reports directory if it doesn't exist
     await fs.mkdir('./reports', { recursive: true });
   
-    var errorCounts = {};
-  
     for (const webpageId of webpageIds) {
       const webpage = await Webpage.findById(webpageId).exec();
   
@@ -144,13 +143,27 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
         const reportPath = `./reports/${webpageId}.json`;
         await fs.writeFile(reportPath, report);
   
-        errorCounts = countLevels(reportPath);
+        const errorCounts = countLevels(reportPath);
+        var A = errorCounts.A;
+        var AA = errorCounts.AA;
+        var AAA = errorCounts.AAA;
+
+        var testList = errorCounts.errorList;
+
+        // Update the webpage document
+        await Webpage.updateOne({ _id: webpageId }, {
+            dataDaUltimaAvaliacao: new Date(),
+            A: A,
+            AA: AA,
+            AAA: AAA,
+            testList: testList
+        });
       }
     }
 
     res.status(200).json({
     success: true,
-    data: errorCounts
+    // data: errorList
     });
 });
 
@@ -161,17 +174,16 @@ function countLevels(filename) {
         const data = fsp.readFileSync(filePath, 'utf8');
         const json = JSON.parse(data);
 
-        var A = 0;
-        var AA = 0;
-        var AAA = 0;
+        // All failed errors combined
+        var ATOTAL = 0;
+        var AATOTAL = 0;
+        var AAATOTAL = 0;
 
-        var errorList = [];
-
-        var errorDictionary = {};
+        let errortests = [];
 
         // Get the URL key from the JSON data
         const urlKey = Object.keys(json)[0];
-        console.log(`URL key: ${urlKey}`);
+        //console.log(`URL key: ${urlKey}`);
 
         const modules = json[urlKey].modules;
 
@@ -183,40 +195,64 @@ function countLevels(filename) {
         for (const [moduleName, moduleValue] of Object.entries(modules)) {
 
             if (moduleName!== "act-rules" && moduleName !== "wcag-techniques") {
-                console.log(`Skiping module: ${moduleName}`);
+                //console.log(`Skiping module: ${moduleName}`);
                 continue;
             }
-            console.log(`Processing module: ${moduleName}`);
+            //console.log(`Processing module: ${moduleName}`);
 
             for (const [assertionKey, assertionValue] of Object.entries(moduleValue.assertions)) {
 
-                console.log(`Processing assertion: ${assertionKey}`);
+                //console.log(`Processing assertion: ${assertionKey}`);
 
                 const errorName = assertionValue.name;
-                console.log(`Error name: ${errorName}`);
+                //console.log(`Error name: ${errorName}`);
+
+                const errorCode = assertionValue.code;
+                //console.log(`Error code: ${errorCode}`);
+
+                const results = assertionValue.results;
+                var resultsTupleList = [];
+
+                for (const [resultKey, resultValue] of Object.entries(results)) {
+
+                    const code = resultValue.resultCode;
+
+                    const elements = resultValue.elements;
+                    for (const [elementKey, elementValue] of Object.entries(elements)) {
+                        const htmlCode = elementValue.htmlCode;
+                        const pointer = elementValue.pointer;
+
+                        resultsTupleList.push({ htmlCode: htmlCode, pointer: pointer });
+                    }
+                }
 
                 const metadata = assertionValue.metadata;
-                const outcome = metadata.outcome;
 
-                if (outcome !== 'failed') {
-                    console.log('Outcome is not failed. Skipping...');
-                    continue;
-                }
-                errorList.push(errorName);
+                const outcome = metadata.outcome;
+                //console.log(`Outcome: ${outcome}`);
+
+                var A = 0;
+                var AA = 0;
+                var AAA = 0;
 
                 const successCriteria = metadata['success-criteria'];
+
                 for (const [criteriaKey, criteriaValue] of Object.entries(successCriteria)) {
 
-                    console.log(`Processing success criteria: ${criteriaValue.name}`);
+                    //console.log(`Processing success criteria: ${criteriaValue.name}`);
 
                     const level = criteriaValue.level;
-                    console.log(`Processing success criteria with level: ${level}`);
+                    //console.log(`Processing success criteria with level: ${level}`);
 
-                    if (!errorDictionary[errorName]) {
-                        errorDictionary[errorName] = { A: 0, AA: 0, AAA: 0 };
+                    if (outcome == 'failed') {
+                        if (level === 'A') {
+                            ATOTAL++;
+                        } else if (level === 'AA') {
+                            AATOTAL++;
+                        } else if (level === 'AAA') {   
+                            AAATOTAL++;
+                        }
                     }
-                    errorDictionary[errorName][level]++;
-
                     if (level === 'A') {
                         A++;
                     } else if (level === 'AA') {
@@ -225,13 +261,37 @@ function countLevels(filename) {
                         AAA++;
                     }
                 }
+
+                let item = {
+                    moduleName: moduleName,
+                    errorCode: errorCode,
+                    // errorName: errorName,
+                    outcome: outcome,
+                    A: A,
+                    AA: AA,
+                    AAA: AAA,
+                    // resultsTupleList: resultsTupleList
+                };
+                
+                errortests.push(item);
             }
         }
+        // console.log(`First error test: ${JSON.stringify(errortests[0])}`);
 
-        console.log('Finished processing JSON data.');
-        console.log(`Error list: ${errorList}`);
-        console.log(`A: ${A}, AA: ${AA}, AAA: ${AAA}`);
-        return errorDictionary;
+        errortests.forEach((errortest, index) => {
+            console.log(`Error test ${index + 1}: ${JSON.stringify(errortest)}`);
+        });
+
+        console.log(`Total A: ${ATOTAL}`);
+        console.log(`Total AA: ${AATOTAL}`);
+        console.log(`Total AAA: ${AAATOTAL}`);
+
+        return {
+            A: ATOTAL,
+            AA: AATOTAL,
+            AAA: AAATOTAL,
+            errorList: errortests
+        };
 
     } catch (err) {
         console.error('An error occurred while trying to read the file:', err);
