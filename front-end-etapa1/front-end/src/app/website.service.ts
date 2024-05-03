@@ -91,6 +91,15 @@ export class WebsiteService {
     );
   }
 
+  evaluate(website: Website) {
+    this.updateWebsite(website);
+    const url = "/evaluate";
+    return this.http.post(url, website , this.httpOptions).pipe(
+      tap(),
+      catchError(this.handleError<any>('evaluateWebsite'))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

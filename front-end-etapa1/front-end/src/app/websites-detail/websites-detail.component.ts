@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { WebsiteService } from '../website.service'; // Make sure to import WebsiteService
-import { Website } from '../website';
+import { AvaliacaoStatus, Website } from '../website';
 import { OnInit } from '@angular/core'; // Import OnInit
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -80,6 +80,18 @@ export class WebsitesDetailComponent {
         console.error('Error adding webpage:', error);
       }
     );
+  }
+
+  evaluate() {
+    this.website.avaliacao = AvaliacaoStatus.EmAvaliacao;
+    this.websiteService.evaluate(this.website).subscribe(
+      response => {
+      console.log('Website set to evaluate successfully:', response);
+      this.getWebsite(this.id);
+    },
+    error => {
+      console.error('Error evaluating:', error);
+    })
   }
 
 }
