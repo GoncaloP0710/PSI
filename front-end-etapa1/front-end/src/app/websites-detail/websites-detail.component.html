@@ -18,7 +18,14 @@
   </mat-form-field>
   <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
 </form>
-<mat-list *ngFor="let webpage of website.webpages">
-    <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
-</mat-list>
-<button mat-button (click)="evaluate()" value="">Inciar Avaliação </button>
+<mat-selection-list #wp>
+  <ng-container *ngFor="let webpage of website.webpages">
+    <mat-list-option>
+      <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
+    </mat-list-option>
+  </ng-container>
+</mat-selection-list>
+
+<p>
+  <button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação </button>
+</p>

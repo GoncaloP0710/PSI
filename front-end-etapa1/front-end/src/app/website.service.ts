@@ -5,6 +5,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Website } from './website';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { Webpage } from './webpage';
 // import { MessageService } from './message.service';
 
 @Injectable({ providedIn: 'root' })
@@ -91,10 +93,14 @@ export class WebsiteService {
     );
   }
 
-  evaluate(website: Website) {
+  evaluate(website: Website, webpageIds: string[]) {
     this.updateWebsite(website);
     const url = "/evaluate";
-    return this.http.post(url, website , this.httpOptions).pipe(
+    const body = {
+      website,
+      webpageIds
+    }
+    return this.http.post(url, body , this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('evaluateWebsite'))
     );

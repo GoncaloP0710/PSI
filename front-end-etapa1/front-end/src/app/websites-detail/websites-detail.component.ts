@@ -9,6 +9,7 @@ import { WebpageService } from '../webpage.service'; // Make sure to import Webs
 import { Webpage } from '../webpage';
 import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
 
 @Component({
   selector: 'app-websites-detail',
@@ -82,9 +83,17 @@ export class WebsitesDetailComponent {
     );
   }
 
-  evaluate() {
+  evaluate(selectionList: MatSelectionList) {
+    let selectedWebpages!:  string[];
+    selectionList.selectedOptions.selected.forEach(option => {
+      const webpageId = option.value; // Assuming the value of each option is the webpage ID
+      const selectedWebpage = this.website.webpages.find(webpage => webpage._id === webpageId);
+      if (selectedWebpage) {
+        selectedWebpages.push(selectedWebpage._id);
+      }
+    });
     this.website.avaliacao = AvaliacaoStatus.EmAvaliacao;
-    this.websiteService.evaluate(this.website).subscribe(
+    this.websiteService.evaluate(this.website, selectedWebpages).subscribe(
       response => {
       console.log('Website set to evaluate successfully:', response);
       this.getWebsite(this.id);
@@ -92,7 +101,9 @@ export class WebsitesDetailComponent {
     error => {
       console.error('Error evaluating:', error);
     })
+    
   }
+
 
 }
 
