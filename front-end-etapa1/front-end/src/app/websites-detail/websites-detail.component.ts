@@ -7,7 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { WebpageService } from '../webpage.service'; // Make sure to import WebsiteService
 import { Webpage } from '../webpage';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'app-websites-detail',
@@ -19,6 +20,13 @@ export class WebsitesDetailComponent {
   id!: string;
 
   webpages!: Webpage[];
+
+  urlFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern('https?://')
+  ]);
+
+  matcher = new ErrorStateMatcher();
 
   webpageControl = new FormControl('');
 

@@ -9,9 +9,12 @@
 <mat-divider></mat-divider>
 <h4>Webpages</h4>
 <form class="example-form">
-<mat-select [formControl]="webpageControl">
-  <mat-option *ngFor="let webpage of webpages" [value]="webpage">{{webpage.url}}</mat-option>
-</mat-select>
+  <mat-form-field class="example-full-width">
+    <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher"
+    placeholder="Ex. {{website.url}}/webpage">
+      <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
+      <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
+  </mat-form-field>
 <button mat-button *ngIf="webpageControl.valid && webpageControl.value" (click)="addWebpageToWebsite(website._id, webpageControl.value)" value="">Adicionar </button>
 </form>
 <mat-list *ngFor="let webpage of website.webpages">
