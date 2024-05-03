@@ -61,8 +61,17 @@ export class WebsitesDetailComponent {
       .subscribe(website => this.website = website);
   }
 
-  addWebpageToWebsite(websiteId: string, webpageId: string): void {
-    this.websiteService.addWebpage(websiteId, webpageId).subscribe(
+  addWebpageToWebsite(websiteId: string, webpageURL: string): void {
+    
+    let id!: string;
+    for(let webpage of this.webpages) {
+      if(webpage.url === webpageURL) {
+        id = webpage._id;
+        break;
+      }
+    }
+
+    this.websiteService.addWebpage(websiteId, id).subscribe(
       response => {
         console.log('Webpage added successfully:', response);
         this.getWebsite(this.id);
