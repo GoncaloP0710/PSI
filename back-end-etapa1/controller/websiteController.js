@@ -134,40 +134,38 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
       if (webpage) {
 
         await qualweb.start();
-
         const evaluation = await qualweb.evaluate({ url: webpage.url });
-
         await qualweb.stop();
   
         const report = JSON.stringify(evaluation, null, 2);
         const reportPath = `./reports/${webpageId}.json`;
         await fs.writeFile(reportPath, report);
   
-        const errorCounts = countLevels(reportPath);
+        const errorCounts = await countLevels(reportPath);
         var A = errorCounts.A;
         var AA = errorCounts.AA;
         var AAA = errorCounts.AAA;
+        var actrules = errorCounts.actrules;
+        var wcagtechniques = errorCounts.wcagtechniques;
 
-        var testList = errorCounts.errorList;
+        var test = await createErrortest(actrules, wcagtechniques);
+        // console.log(`Test: ${test}`);
 
-        // Update the webpage document
-        await Webpage.updateOne({ _id: webpageId }, {
-            dataDaUltimaAvaliacao: new Date(),
-            A: A,
-            AA: AA,
-            AAA: AAA,
-            testList: testList
-        });
+        // // Update the webpage document
+        // await Webpage.updateOne({ _id: webpageId }, {
+        //     dataDaUltimaAvaliacao: new Date(),
+        //     A: A,
+        //     AA: AA,
+        //     AAA: AAA,
+        //     test: test
+        // });
       }
     }
 
-    res.status(200).json({
-    success: true,
-    // data: errorList
-    });
+    res.json(test);
 });
 
-function countLevels(filename) {
+async function countLevels(filename) {
     const filePath = path.resolve(filename);
     console.log(`Reading file: ${filePath}`);
     try {
@@ -179,15 +177,13 @@ function countLevels(filename) {
         var AATOTAL = 0;
         var AAATOTAL = 0;
 
-        let errortests = [];
+        let actrules = [];
+        let wcagtechniques = [];
 
-        // Get the URL key from the JSON data
         const urlKey = Object.keys(json)[0];
-        //console.log(`URL key: ${urlKey}`);
-
         const modules = json[urlKey].modules;
 
-        if (!modules) {
+        if (modules === undefined || modules === null) {
             console.error('Invalid JSON data: "modules" does not exist');
             return null;
         }
@@ -195,41 +191,30 @@ function countLevels(filename) {
         for (const [moduleName, moduleValue] of Object.entries(modules)) {
 
             if (moduleName!== "act-rules" && moduleName !== "wcag-techniques") {
-                //console.log(`Skiping module: ${moduleName}`);
                 continue;
             }
-            //console.log(`Processing module: ${moduleName}`);
 
             for (const [assertionKey, assertionValue] of Object.entries(moduleValue.assertions)) {
 
-                //console.log(`Processing assertion: ${assertionKey}`);
-
-                const errorName = assertionValue.name;
-                //console.log(`Error name: ${errorName}`);
-
                 const errorCode = assertionValue.code;
-                //console.log(`Error code: ${errorCode}`);
+                // const results = assertionValue.results;
+                // var resultsTupleList = [];
 
-                const results = assertionValue.results;
-                var resultsTupleList = [];
+                // for (const [resultKey, resultValue] of Object.entries(results)) {
 
-                for (const [resultKey, resultValue] of Object.entries(results)) {
+                //     const code = resultValue.resultCode;
 
-                    const code = resultValue.resultCode;
+                //     const elements = resultValue.elements;
+                //     for (const [elementKey, elementValue] of Object.entries(elements)) {
+                //         const htmlCode = elementValue.htmlCode;
+                //         const pointer = elementValue.pointer;
 
-                    const elements = resultValue.elements;
-                    for (const [elementKey, elementValue] of Object.entries(elements)) {
-                        const htmlCode = elementValue.htmlCode;
-                        const pointer = elementValue.pointer;
-
-                        resultsTupleList.push({ htmlCode: htmlCode, pointer: pointer });
-                    }
-                }
+                //         resultsTupleList.push({ htmlCode: htmlCode, pointer: pointer });
+                //     }
+                // }
 
                 const metadata = assertionValue.metadata;
-
                 const outcome = metadata.outcome;
-                //console.log(`Outcome: ${outcome}`);
 
                 var A = 0;
                 var AA = 0;
@@ -238,11 +223,7 @@ function countLevels(filename) {
                 const successCriteria = metadata['success-criteria'];
 
                 for (const [criteriaKey, criteriaValue] of Object.entries(successCriteria)) {
-
-                    //console.log(`Processing success criteria: ${criteriaValue.name}`);
-
                     const level = criteriaValue.level;
-                    //console.log(`Processing success criteria with level: ${level}`);
 
                     if (outcome == 'failed') {
                         if (level === 'A') {
@@ -265,36 +246,40 @@ function countLevels(filename) {
                 let item = {
                     moduleName: moduleName,
                     errorCode: errorCode,
-                    // errorName: errorName,
                     outcome: outcome,
                     A: A,
                     AA: AA,
                     AAA: AAA,
-                    // resultsTupleList: resultsTupleList
                 };
                 
-                errortests.push(item);
+                if (moduleName === 'act-rules') {
+                    actrules.push(item);
+                } else if (moduleName === 'wcag-techniques') {
+                    wcagtechniques.push(item);
+                }
             }
         }
-        // console.log(`First error test: ${JSON.stringify(errortests[0])}`);
-
-        errortests.forEach((errortest, index) => {
-            console.log(`Error test ${index + 1}: ${JSON.stringify(errortest)}`);
-        });
-
-        console.log(`Total A: ${ATOTAL}`);
-        console.log(`Total AA: ${AATOTAL}`);
-        console.log(`Total AAA: ${AAATOTAL}`);
 
         return {
             A: ATOTAL,
             AA: AATOTAL,
             AAA: AAATOTAL,
-            errorList: errortests
+            actrules: actrules,
+            wcagtechniques: wcagtechniques
         };
 
     } catch (err) {
         console.error('An error occurred while trying to read the file:', err);
         return null;
     }
+}
+
+async function createErrortest(actrules, wcagtechniques) {
+    const errortestDetails= {
+        actrules: actrules,
+        wcagtechniques: wcagtechniques,
+    };
+    const errortest = new Errortest(errortestDetails);
+    await errortest.save();
+    return errortest;
 }
