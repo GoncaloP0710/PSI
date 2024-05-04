@@ -23,11 +23,10 @@
 <mat-selection-list #wp>
   <ng-container *ngFor="let webpage of website.webpages">
     <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
-    <mat-list-option>
+    <mat-list-option value="{{webpage._id}}">
     </mat-list-option>
   </ng-container>
 </mat-selection-list>
 
-<p>
-  <button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação </button>
-</p>
+<button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação</button>
+<button mat-button (click)="deleteWebpages(wp)" value="">Apagar</button>

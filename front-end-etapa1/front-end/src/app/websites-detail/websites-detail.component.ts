@@ -42,15 +42,13 @@ export class WebsitesDetailComponent {
   getWebpages(): void {
     this.webpageService.getWebpages().subscribe(
       webpages => {
-        console.log('Websites fetched successfully:', webpages);
+        console.log('Websites fetched successfully:');
         this.webpages = webpages;
       },
       error => {
         console.error('Error fetching websites:', error);
       }
     );
-    console.log("depois do fetch")
-    console.log("websites na memoria: " + this.webpages);
   }
 
   goBack(): void {
@@ -78,8 +76,7 @@ export class WebsitesDetailComponent {
         );
       }
     );
-    
-    
+  
   }
 
   evaluate(selectionList: MatSelectionList) {
@@ -102,6 +99,22 @@ export class WebsitesDetailComponent {
     })
     
   }
+
+  deleteWebpages(selectionList: MatSelectionList) {
+    let selectedWebpages:  string[] = [];
+    selectionList.selectedOptions.selected.forEach(option => {
+      const webpageId = option.value; // Assuming the value of each option is the webpage ID
+      const selectedWebpage = this.website.webpages.find(webpage => webpage._id === webpageId);
+      if (selectedWebpage) {
+        selectedWebpages.push(selectedWebpage._id);
+      }
+    });
+    for(let id of selectedWebpages)
+      this.webpageService.deleteWebpage(id).subscribe();// Assuming the value of each option is the webpage ID
+    this.getWebpages();
+    this.getWebsite(this.id);
+      
+  } 
 
 
 }
