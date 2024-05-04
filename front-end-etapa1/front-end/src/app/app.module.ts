@@ -8,7 +8,6 @@ import { WebsitesComponent } from './websites/websites.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { WebsitesDetailComponent } from './websites-detail/websites-detail.component';
-import { WebpagesComponent } from './webpages/webpages.component';
 import { WebpagesDetailComponent } from './webpages-detail/webpages-detail.component';
 
 import {MatIconModule} from '@angular/material/icon';
@@ -34,7 +33,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
 const routes: Routes = [
   { path: 'websites', component: WebsitesComponent },
-  { path: 'webpages', component: WebpagesComponent },
   { path: '', redirectTo: '/websites', pathMatch: 'full' },
   { path: 'webpage/:id', component: WebpagesDetailComponent},
   { path: 'website/:id', component: WebsitesDetailComponent}
@@ -45,7 +43,6 @@ const routes: Routes = [
     AppComponent,
     WebsitesComponent,
     WebsitesDetailComponent,
-    WebpagesComponent,
     WebpagesDetailComponent
   ],
   imports: [

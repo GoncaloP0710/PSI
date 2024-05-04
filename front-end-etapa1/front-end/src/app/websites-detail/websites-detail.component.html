@@ -1,3 +1,5 @@
+<button (click)="goBack()">back</button>
+
 <h1>Detalhes de website</h1>
 
 <mat-list>
@@ -20,8 +22,8 @@
 </form>
 <mat-selection-list #wp>
   <ng-container *ngFor="let webpage of website.webpages">
+    <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
     <mat-list-option>
-      <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
     </mat-list-option>
   </ng-container>
 </mat-selection-list>

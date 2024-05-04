@@ -62,25 +62,24 @@ export class WebsitesDetailComponent {
       .subscribe(website => this.website = website);
   }
 
-  addWebpageToWebsite(websiteId: string, webpageURL: string): void {
+  addWebpageToWebsite(websiteId: string, url: string): void {
     
-    let id!: string;
-    for(let webpage of this.webpages) {
-      if(webpage.url === webpageURL) {
-        id = webpage._id;
-        break;
-      }
-    }
-
-    this.websiteService.addWebpage(websiteId, id).subscribe(
-      response => {
-        console.log('Webpage added successfully:', response);
-        this.getWebsite(this.id);
-      },
-      error => {
-        console.error('Error adding webpage:', error);
+    this.webpageService.addWebpage({ url } as Webpage).subscribe(
+      webpage => {
+        this.getWebpages();
+        this.websiteService.addWebpage(websiteId, webpage._id).subscribe(
+          response => {
+            console.log('Webpage added successfully:', response);
+            this.getWebsite(this.id);
+          },
+          error => {
+            console.error('Error adding webpage:', error);
+          }
+        );
       }
     );
+    
+    
   }
 
   evaluate(selectionList: MatSelectionList) {
