@@ -122,48 +122,74 @@ exports.update_avaliacao = asyncHandler(async (req, res, next) => {
 });
 
 exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
-    const webpageIds = req.body.webpageIds; // assuming the webpage IDs are sent in the request body
-    const qualweb = new QualWeb();
-  
-    // Create the ./reports directory if it doesn't exist
-    await fs.mkdir('./reports', { recursive: true });
-  
-    for (const webpageId of webpageIds) {
-      const webpage = await Webpage.findById(webpageId).exec();
-  
-      if (webpage) {
+    const website = await Website.findById(req.params.id).populate('webpages').exec();
+    website.avaliacao = 'Em avaliação';
+    await website.save();
+    
+    try {
+        const webpageIds = req.body.webpageIds; // assuming the webpage IDs are sent in the request body
+        const qualweb = new QualWeb();
+    
+        // Create the ./reports directory if it doesn't exist
+        await fs.mkdir('./reports', { recursive: true });
 
-        await qualweb.start();
-        const evaluation = await qualweb.evaluate({ url: webpage.url });
-        await qualweb.stop();
-  
-        const report = JSON.stringify(evaluation, null, 2);
-        const reportPath = `./reports/${webpageId}.json`;
-        await fs.writeFile(reportPath, report);
-  
-        const errorCounts = await countLevels(evaluation);
-        var A = errorCounts.A;
-        var AA = errorCounts.AA;
-        var AAA = errorCounts.AAA;
-        var actrules = errorCounts.actrules;
-        var wcagtechniques = errorCounts.wcagtechniques;
+        // 10 most coomon errors
+        var hashmap = {};
 
-        var test = await createErrortest(actrules, wcagtechniques);
+        for (const webpageId of webpageIds) {
+            const webpage = await Webpage.findById(webpageId).exec();
+    
+            if (webpage) {
+                await qualweb.start();
+                const evaluation = await qualweb.evaluate({ url: webpage.url });
+                await qualweb.stop();
+    
+                // Generate the EARL report JSON file
+                const report = JSON.stringify(evaluation, null, 2);
+                const reportPath = `./reports/${webpageId}.json`;
+                await fs.writeFile(reportPath, report);
+    
+                const errorCounts = await countLevels(evaluation,hashmap);
+                var A = errorCounts.A;
+                var AA = errorCounts.AA;
+                var AAA = errorCounts.AAA;
+                var actrules = errorCounts.actrules;
+                var wcagtechniques = errorCounts.wcagtechniques;
+                var test = await createErrortest(actrules, wcagtechniques);
+                hashmap = errorCounts.hashmap;
+    
+                // Update the webpage document
+                webpage.dataDaUltimaAvaliacao = new Date(),
+                webpage.A = A;
+                webpage.AA = AA;
+                webpage.AAA = AAA;
+                webpage.test = test;
 
-        // Update the webpage document
-        webpage.dataDaUltimaAvaliacao = new Date(),
-        webpage.A = A;
-        webpage.AA = AA;
-        webpage.AAA = AAA;
-        webpage.test = test;
-        await webpage.save();
-      }
+                if (A > 0 || AA > 0) {
+                    webpage.avaliacao = 'Não conforme';
+                } else {
+                    webpage.avaliacao = 'Conforme';
+                }
+
+                await webpage.save();
+
+            }
+        }
+
+        var top10 = getTopTen(hashmap);
+
+    } catch (error) {
+        website.avaliacao = 'Erro na avaliação';
+        await website.save();
+        console.error('An error occurred:', error);
     }
 
-    res.json(test);
+    website.avaliacao = 'Avaliado';
+    await website.save();
+    res.json(top10);
 });
 
-async function countLevels(report) {
+async function countLevels(report,hashmap) {
     //const filePath = path.resolve(filename);
     //console.log(`Reading file: ${filePath}`);
     try {
@@ -255,6 +281,15 @@ async function countLevels(report) {
                 } else if (moduleName === 'wcag-techniques') {
                     wcagtechniques.push(item);
                 }
+
+                if (outcome == 'failed') {
+                    if (hashmap.hasOwnProperty(errorCode)) {
+                        hashmap[errorCode] += 1;
+                    } else {
+                        hashmap[errorCode] = 1;
+                    }
+                }
+                
             }
         }
 
@@ -263,7 +298,8 @@ async function countLevels(report) {
             AA: AATOTAL,
             AAA: AAATOTAL,
             actrules: actrules,
-            wcagtechniques: wcagtechniques
+            wcagtechniques: wcagtechniques,
+            hashmap: hashmap
         };
 
     } catch (err) {
@@ -289,4 +325,17 @@ async function createErrortest(actrules, wcagtechniques) {
     }
     
     return errortest;
+}
+
+function getTopTen(hashmap) {
+    // Convert the hashmap into an array of [key, value] pairs
+    let pairs = Object.entries(hashmap);
+
+    // Sort the pairs by value in descending order
+    pairs.sort((a, b) => b[1] - a[1]);
+
+    // Get the keys of the top 10 pairs
+    let topTenKeys = pairs.slice(0, 10).map(pair => pair[0]);
+
+    return topTenKeys;
 }
