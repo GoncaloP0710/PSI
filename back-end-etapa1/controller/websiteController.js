@@ -141,7 +141,7 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
         const reportPath = `./reports/${webpageId}.json`;
         await fs.writeFile(reportPath, report);
   
-        const errorCounts = await countLevels(reportPath);
+        const errorCounts = await countLevels(evaluation);
         var A = errorCounts.A;
         var AA = errorCounts.AA;
         var AAA = errorCounts.AAA;
@@ -149,28 +149,26 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
         var wcagtechniques = errorCounts.wcagtechniques;
 
         var test = await createErrortest(actrules, wcagtechniques);
-        // console.log(`Test: ${test}`);
 
-        // // Update the webpage document
-        // await Webpage.updateOne({ _id: webpageId }, {
-        //     dataDaUltimaAvaliacao: new Date(),
-        //     A: A,
-        //     AA: AA,
-        //     AAA: AAA,
-        //     test: test
-        // });
+        // Update the webpage document
+        webpage.dataDaUltimaAvaliacao = new Date(),
+        webpage.A = A;
+        webpage.AA = AA;
+        webpage.AAA = AAA;
+        webpage.test = test;
+        await webpage.save();
       }
     }
 
     res.json(test);
 });
 
-async function countLevels(filename) {
-    const filePath = path.resolve(filename);
-    console.log(`Reading file: ${filePath}`);
+async function countLevels(report) {
+    //const filePath = path.resolve(filename);
+    //console.log(`Reading file: ${filePath}`);
     try {
-        const data = fsp.readFileSync(filePath, 'utf8');
-        const json = JSON.parse(data);
+        //const data = fsp.readFileSync(filePath, 'utf8');
+        const json = report;
 
         // All failed errors combined
         var ATOTAL = 0;
@@ -279,7 +277,16 @@ async function createErrortest(actrules, wcagtechniques) {
         actrules: actrules,
         wcagtechniques: wcagtechniques,
     };
-    const errortest = new Errortest(errortestDetails);
-    await errortest.save();
+    console.log(`Error test details`)
+    const errortest = await new Errortest(errortestDetails);
+    console.log(`Error test`)
+    try {
+        await errortest.save();
+        console.log('Error test saved');
+    } catch (error) {
+        console.log('Error saving error test');
+        console.log(error);
+    }
+    
     return errortest;
 }
