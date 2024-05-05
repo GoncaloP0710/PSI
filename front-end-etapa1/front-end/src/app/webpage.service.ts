@@ -55,16 +55,18 @@ export class WebpageService {
     );
   }
 
-  deleteWebpages(ids: string[]): Observable<Object[]> {
+  deleteWebpages(webpageIds: string[]): Observable<Webpage> {
 
-    const deletionObservables = ids.map(id =>
-      this.http.delete(`${this.webpageUrl}/${id}`, this.httpOptions).pipe(
-        tap(),
-        catchError(this.handleError<Webpage>('deleteWebpage'))
-      )
+    const url = `${this.webpageUrl}/`;
+
+    let options = {
+      headers: this.httpOptions.headers,
+      body: {webpageIds}
+    }
+    return this.http.delete<Webpage>(url, options).pipe(
+      tap(),
+      catchError(this.handleError<Webpage>('deleteWebpage'))
     );
-
-    return forkJoin(deletionObservables);
   }
 
   /** PUT: update the webpage on the server */

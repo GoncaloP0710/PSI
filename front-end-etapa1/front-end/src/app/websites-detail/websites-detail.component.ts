@@ -64,11 +64,11 @@ export class WebsitesDetailComponent {
     
     this.webpageService.addWebpage({ url } as Webpage).subscribe(
       webpage => {
-        this.getWebpages();
+        this.webpages = [...this.webpages, webpage];
         this.websiteService.addWebpage(websiteId, webpage._id).subscribe(
           response => {
             console.log('Webpage added successfully:', response);
-            this.getWebsite(this.id);
+            this.website.webpages = [...this.website.webpages, webpage];
           },
           error => {
             console.error('Error adding webpage:', error);
@@ -92,7 +92,6 @@ export class WebsitesDetailComponent {
     this.websiteService.evaluate(this.website, selectedWebpages).subscribe(
       response => {
       console.log('Website set to evaluate successfully:', response);
-      this.getWebsite(this.id);
     },
     error => {
       console.error('Error evaluating:', error);
@@ -109,9 +108,9 @@ export class WebsitesDetailComponent {
         selectedWebpages.push(selectedWebpage._id);
       }
     });
+    this.webpages = this.webpages.filter(w => !selectedWebpages.includes(w._id));
+    this.website.webpages = this.website.webpages.filter(w => !selectedWebpages.includes(w._id));
     this.webpageService.deleteWebpages(selectedWebpages).subscribe();  
-    this.getWebpages();
-    this.getWebsite(this.id);
   } 
 
 
