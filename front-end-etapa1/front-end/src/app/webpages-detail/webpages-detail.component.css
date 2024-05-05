@@ -1,5 +1,23 @@
+button.back {
+    font-size: medium;
+    border-style: solid;
+    padding: 5px;
+    border-radius: 10px;
+    width:170px
+}
+
 mat-list {
     border-top-style: solid;
     line-height: 2;
-    width:600px
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(0,0,0,0.2);
+    width:550px;
+}
+
+mat-divider {
+    width:600px;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 20px;
 }

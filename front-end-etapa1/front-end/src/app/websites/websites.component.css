@@ -8,7 +8,8 @@ section {
   border-style: solid;
   border-width: 2px;
   border-color: rgba(0,0,0,0.2);
-  width:500px;
+  width:518px;
+  margin-bottom: 20px;
 }
 
 .example-form, .example-full-width {
@@ -16,8 +17,11 @@ section {
   margin-bottom: 16px;
 }
 
-.mat-divider {
-  margin: 16px 0;
+mat-divider {
+  width:600px;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 20px;
 }
 
 form {
@@ -68,13 +72,6 @@ mat-option {
 
 .avalSelect {
   display: grid;
-}
-
-h3 {
-  border-top-style: solid;
-  border-top-width: 2px;
-  padding-top: 20px;
-  width:600px;
 }
 
 button {
