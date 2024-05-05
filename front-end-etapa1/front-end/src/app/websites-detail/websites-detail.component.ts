@@ -60,6 +60,21 @@ export class WebsitesDetailComponent {
       .subscribe(website => this.website = website);
   }
 
+  deleteWebsite() {
+    if(this.website.webpages.length != 0) {
+      var userInput = confirm("Tem páginas associadas a este website!\n As páginas associadas a este website serão também eliminadas. \n Quer apagar o website?"
+      );
+      if(userInput) {
+        const ids = this.website.webpages.map(w => w._id);
+        this.webpageService.deleteWebpages(ids).subscribe();
+      } else {
+        return;
+      }
+    }
+    this.websiteService.deleteWebsite(this.id).subscribe();
+    this.goBack();
+  }
+
   addWebpageToWebsite(websiteId: string, url: string): void {
     
     this.webpageService.addWebpage({ url } as Webpage).subscribe(

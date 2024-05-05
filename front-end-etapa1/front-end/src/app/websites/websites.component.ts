@@ -6,6 +6,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { WebpageService } from '../webpage.service';
 
 @Component({
   selector: 'app-websites',
@@ -20,7 +21,7 @@ export class WebsitesComponent implements OnInit {
   url: string = '';
   ascendente: boolean = false;
 
-  displayedColumns: string[] = ['URL', "Data de Registo", 'Data da ultima avaliação', 'Avaliação', "Detalhe"];
+  displayedColumns: string[] = ['URL', "Data de Registo", 'Data da ultima avaliação', 'Avaliação', "Detalhe", "Apagar"];
   avalFormControl = new FormControl('');
 
   avaliacao: string[] = ["Por avaliar", "Em avaliação", "Avaliado", "Erro na avaliação"];
@@ -32,7 +33,7 @@ export class WebsitesComponent implements OnInit {
 
   matcher = new ErrorStateMatcher();
 
-  constructor(private websiteService: WebsiteService) { }
+  constructor(private websiteService: WebsiteService, private webpageService: WebpageService) { }
 
   ngOnInit(): void {
     this.getWebsites();
@@ -68,6 +69,15 @@ export class WebsitesComponent implements OnInit {
   }
 
   delete(website: Website): void {
+    if(website.webpages.length != 0) {
+      var userInput = confirm("Tem páginas associadas a este website!\n As páginas associadas a este website serão também eliminadas. \n Quer apagar o website?");
+      if(userInput) {
+        const ids = website.webpages.map(w => w._id);
+        this.webpageService.deleteWebpages(ids);
+      } else {
+        return;
+      }
+    }
     this.websites = this.websites.filter(w => w !== website);
     this.websiteService.deleteWebsite(website._id).subscribe();
   }
