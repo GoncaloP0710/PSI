@@ -7,6 +7,17 @@ export interface Website {
     dataDeRegisto: Date;
     dataDaUltimaAvaliacao: Date;
     webpages: Webpage[];
+    countA: string,
+    countAA: string,
+    countAAA: string,
+    topTenErrors: String,
+    percentageCountA: string,
+    percentageCountAA: string,
+    percentageCountAAA: string,
+    countAny: string,
+    countNone: string,
+    percentageNone: string,
+    percentageAny: string
 }
 
 export enum AvaliacaoStatus {

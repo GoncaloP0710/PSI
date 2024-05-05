@@ -194,6 +194,7 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
     var percentageA = countAny ? (countA / countAny) * 100 : 0;
     var percentageAA = countAny ? (countAA / countAny) * 100 : 0;
     var percentageAAA = countAny ? (countAAA / countAny) * 100 : 0;
+    var percentageAny = countAny ? (countAny / website.webpages.length) * 100 : 0;
     var percentageNone = countNone ? (countNone / website.webpages.length) * 100 : 0;
 
     website.countA = countA;
@@ -206,6 +207,7 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
     website.countAny = countAny;
     website.countNone = countNone;
     website.percentageNone = percentageNone;
+    website
 
     await website.save();
 

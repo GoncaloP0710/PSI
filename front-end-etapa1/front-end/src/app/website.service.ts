@@ -94,7 +94,7 @@ export class WebsiteService {
   }
 
   evaluate(website: Website, webpageIds: string[]) {
-    const url = `${website._id}/evaluate`;
+    const url = `${this.websiteUrl}/${website._id}/evaluate`;
     const body = {
       webpageIds
     };

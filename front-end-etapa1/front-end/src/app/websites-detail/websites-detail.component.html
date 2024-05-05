@@ -30,3 +30,35 @@
 
 <button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação</button>
 <button mat-button (click)="deleteWebpages(wp)" value="">Apagar</button>
+
+<p>Dados da última avaliação</p>
+
+
+  
+  <table mat-table class="mat-elevation-z8" [dataSource]="stats">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Descrição Column -->
+    <ng-container matColumnDef="Descrição" >
+      <th mat-header-cell *matHeaderCellDef> Descrição </th>
+      <td mat-cell *matCellDef="let element"> {{element.Descricao}} </td>
+    </ng-container>
+  
+    <!-- Total Column -->
+    <ng-container matColumnDef="Total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let element"> {{element.Total}} </td>
+    </ng-container>
+  
+    <!-- Percentagem Column -->
+    <ng-container matColumnDef="Percentagem">
+      <th mat-header-cell *matHeaderCellDef> Percentagem </th>
+      <td mat-cell *matCellDef="let element"> {{element.Percentagem}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
