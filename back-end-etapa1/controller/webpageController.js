@@ -44,24 +44,26 @@ exports.create_webpage = [
         }
 })];
 
-exports.delete_webpage = asyncHandler(async (req, res, next) => {
+exports.delete_webpages = asyncHandler(async (req, res, next) => {
     try {
-        const webpageId = req.params.id;
+        const webpageIds = req.body.webpageIds; // assuming the webpage IDs are sent in the request body
 
-        // Find all websites that contain the webpage
-        const websites = await Website.find({ webpages: webpageId }).exec();
+        for (const webpageId of webpageIds) {
+            // Find all websites that contain the webpage
+            const websites = await Website.find({ webpages: webpageId }).exec();
 
-        // Update each website to remove the webpage
-        for (const website of websites) {
-            const index = website.webpages.indexOf(webpageId);
-            if (index > -1) {
-                website.webpages.splice(index, 1);
-                await website.save();
+            // Update each website to remove the webpage
+            for (const website of websites) {
+                const index = website.webpages.indexOf(webpageId);
+                if (index > -1) {
+                    website.webpages.splice(index, 1);
+                    await website.save();
+                }
             }
-        }
 
-        // Delete the webpage
-        await Webpage.findByIdAndDelete(webpageId);
+            // Delete the webpage
+            await Webpage.findByIdAndDelete(webpageId);
+        }
 
         res.sendStatus(200);
     } catch (error) {
