@@ -73,7 +73,7 @@ export class WebsitesComponent implements OnInit {
       var userInput = confirm("Tem páginas associadas a este website!\n As páginas associadas a este website serão também eliminadas. \n Quer apagar o website?");
       if(userInput) {
         const ids = website.webpages.map(w => w._id);
-        this.webpageService.deleteWebpages(ids);
+        this.webpageService.deleteWebpages(ids).subscribe();
       } else {
         return;
       }
