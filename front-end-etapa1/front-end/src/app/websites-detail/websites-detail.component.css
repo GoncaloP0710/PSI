@@ -12,9 +12,9 @@ button.back {
 button.apagar {
     background-color: rgb(249, 74, 74);
     border-style: solid;
-    position:absolute;
-    left:400px;
-    bottom:710px;
+    position:relative;
+    left:200px;
+    top:55px;
 }
 
 button.adicionar {
