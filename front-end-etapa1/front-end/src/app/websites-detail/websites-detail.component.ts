@@ -109,12 +109,11 @@ export class WebsitesDetailComponent {
         selectedWebpages.push(selectedWebpage._id);
       }
     });
-    for(let id of selectedWebpages)
-      this.webpageService.deleteWebpage(id).subscribe();// Assuming the value of each option is the webpage ID
+    this.webpageService.deleteWebpages(selectedWebpages).subscribe();  
     this.getWebpages();
     this.getWebsite(this.id);
-      
   } 
+
 
 
 }

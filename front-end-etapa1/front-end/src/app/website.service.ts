@@ -94,12 +94,10 @@ export class WebsiteService {
   }
 
   evaluate(website: Website, webpageIds: string[]) {
-    this.updateWebsite(website);
-    const url = "/evaluate";
+    const url = `${website._id}/evaluate`;
     const body = {
-      website,
       webpageIds
-    }
+    };
     return this.http.post(url, body , this.httpOptions).pipe(
       tap(),
       catchError(this.handleError<any>('evaluateWebsite'))

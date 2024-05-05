@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Webpage } from './webpage';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -53,6 +53,18 @@ export class WebpageService {
       tap(),
       catchError(this.handleError<Webpage>('deleteWebpage'))
     );
+  }
+
+  deleteWebpages(ids: string[]): Observable<Object[]> {
+
+    const deletionObservables = ids.map(id =>
+      this.http.delete(`${this.webpageUrl}/${id}`, this.httpOptions).pipe(
+        tap(),
+        catchError(this.handleError<Webpage>('deleteWebpage'))
+      )
+    );
+
+    return forkJoin(deletionObservables);
   }
 
   /** PUT: update the webpage on the server */
