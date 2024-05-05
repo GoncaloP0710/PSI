@@ -1,18 +1,64 @@
+button {
+    font-size: medium;
+}
+
+button.back {
+    border-style: solid;
+    padding: 5px;
+    border-radius: 10px;
+    width:170px;
+}
+
+button.apagar {
+    background-color: rgb(249, 74, 74);
+    border-style: solid;
+    position:absolute;
+    left:400px;
+    bottom:710px;
+}
+
+button.adicionar {
+    background-color: lightgreen;
+    width:90px;
+}
+
+.example-form, .example-full-width {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
 mat-list {
-    border-top-style: solid;
     line-height: 2;
-    width:600px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(0,0,0,0.2);
+    width:550px;
+    margin-bottom: 20px;
 }
 
 mat-divider {
     width:600px;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 20px;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background-color: #fff;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgba(0,0,0,0.2);
+    width:518px;
+    margin-bottom: 20px;
 }
 
 form {
-    background-color: lightgray;
-    width:600px;
-    border-style: solid;
-    border-width: 1px;
-    padding:5px;
+    margin-bottom: 16px;
 }
 
+input {
+    width:500px;
+}

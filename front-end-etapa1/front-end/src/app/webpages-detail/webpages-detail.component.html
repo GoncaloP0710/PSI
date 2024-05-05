@@ -1,8 +1,8 @@
-<button (click)="goBack()">back</button>
-<h1>Detalhe da Webpage</h1>
-
+<button (click)="goBack()" class="back">Back to website</button>
+<h1>Detalhes de Webpage</h1>
+<mat-divider></mat-divider>
 <mat-list>
-    <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
+  <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
   <mat-list-item role="listitem">Data da última avaliação: {{webpage.lastEvaluationDate?webpage.lastEvaluationDate:"-"}}</mat-list-item>
   <mat-list-item role="listitem">Conforme: {{webpage.isCompliant?"Sim":"Não"}}</mat-list-item>
 </mat-list>

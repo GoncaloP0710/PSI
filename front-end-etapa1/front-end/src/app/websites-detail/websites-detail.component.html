@@ -1,25 +1,29 @@
-<button (click)="goBack()">back</button>
+<button (click)="goBack()" class="back">Back to website list</button>
 
-<h1>Detalhes de website</h1> <button mat-button (click)="deleteWebsite()" value="">Eliminar Website</button>
+<h1>Detalhes de Website</h1><button mat-button (click)="deleteWebsite()" value="" class="apagar">Eliminar Website</button>
+<mat-divider></mat-divider>
 
 <mat-list>
   <mat-list-item role="listitem">URL: {{website.url}}</mat-list-item>
-    <mat-list-item role="listitem">Avaliacao: {{website.avaliacao}}</mat-list-item>
+    <mat-list-item role="listitem">Avaliação: {{website.avaliacao}}</mat-list-item>
     <mat-list-item role="listitem">Data de registo: {{website.dataDeRegisto}}</mat-list-item>
   <mat-list-item role="listitem">Data da última avaliação: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"-"}}</mat-list-item>
 </mat-list>
 <mat-divider></mat-divider>
-<h4>Webpages</h4>
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher"
-    placeholder="Ex. {{website.url}}/webpage">
-      <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
-      <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
-
-  </mat-form-field>
-  <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
-</form>
+<h4>Add Webpage</h4>
+<section>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher" placeholder="Ex. {{website.url}}/webpage">
+        <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
+        <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
+  
+    </mat-form-field>
+  </form>
+  <button mat-button class="adicionar" *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
+</section>
+<mat-divider></mat-divider>
+<h4>Webpage list</h4>
 <mat-selection-list #wp>
   <ng-container *ngFor="let webpage of website.webpages">
     <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
