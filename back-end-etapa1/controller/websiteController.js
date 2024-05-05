@@ -149,14 +149,13 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 const reportPath = `./reports/${webpageId}.json`;
                 await fs.writeFile(reportPath, report);
     
-                const errorCounts = await countLevels(evaluation,hashmap);
+                const errorCounts = await countLevels(evaluation);
                 var A = errorCounts.A;
                 var AA = errorCounts.AA;
                 var AAA = errorCounts.AAA;
                 var actrules = errorCounts.actrules;
                 var wcagtechniques = errorCounts.wcagtechniques;
                 var test = await createErrortest(actrules, wcagtechniques);
-                hashmap = errorCounts.hashmap;
     
                 // Update the webpage document
                 webpage.dataDaUltimaAvaliacao = new Date(),
@@ -175,9 +174,6 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
 
             }
         }
-
-        var top10 = getTopTen(hashmap);
-
     } catch (error) {
         website.avaliacao = 'Erro na avaliação';
         await website.save();
@@ -186,10 +182,37 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
 
     website.avaliacao = 'Avaliado';
     await website.save();
+
+    var top10 = await getTopTen(website);
+    var errorCounts = await countWebpagesWithErrors(website);
+    var countA = errorCounts.countA;
+    var countAA = errorCounts.countAA;
+    var countAAA = errorCounts.countAAA;
+    var countAny = errorCounts.countAny;
+    var countNone = errorCounts.countNone;
+
+    var percentageA = countAny ? (countA / countAny) * 100 : 0;
+    var percentageAA = countAny ? (countAA / countAny) * 100 : 0;
+    var percentageAAA = countAny ? (countAAA / countAny) * 100 : 0;
+    var percentageNone = countNone ? (countNone / website.webpages.length) * 100 : 0;
+
+    website.countA = countA;
+    website.countAA = countAA;
+    website.countAAA = countAAA;
+    website.topTenErrors = top10;
+    website.percentageCountA = percentageA;
+    website.percentageCountAA = percentageAA;
+    website.percentageCountAAA = percentageAAA;
+    website.countAny = countAny;
+    website.countNone = countNone;
+    website.percentageNone = percentageNone;
+
+    await website.save();
+
     res.json(top10);
 });
 
-async function countLevels(report,hashmap) {
+async function countLevels(report) {
     //const filePath = path.resolve(filename);
     //console.log(`Reading file: ${filePath}`);
     try {
@@ -280,16 +303,7 @@ async function countLevels(report,hashmap) {
                     actrules.push(item);
                 } else if (moduleName === 'wcag-techniques') {
                     wcagtechniques.push(item);
-                }
-
-                if (outcome == 'failed') {
-                    if (hashmap.hasOwnProperty(errorCode)) {
-                        hashmap[errorCode] += 1;
-                    } else {
-                        hashmap[errorCode] = 1;
-                    }
-                }
-                
+                }      
             }
         }
 
@@ -299,7 +313,6 @@ async function countLevels(report,hashmap) {
             AAA: AAATOTAL,
             actrules: actrules,
             wcagtechniques: wcagtechniques,
-            hashmap: hashmap
         };
 
     } catch (err) {
@@ -327,15 +340,74 @@ async function createErrortest(actrules, wcagtechniques) {
     return errortest;
 }
 
-function getTopTen(hashmap) {
-    // Convert the hashmap into an array of [key, value] pairs
+async function getTopTen(website) {
+    // 10 most coomon errors
+    var hashmap = {};
+
+    for (const webpageId of website.webpages) {
+        const webpage = await Webpage.findById(webpageId).populate('test').exec();
+        
+
+        if (webpage.test) {
+            for (const actrule of webpage.test.actrules) {
+                if (actrule.outcome == 'failed') {
+                    if (webpage.test.actrules && hashmap.hasOwnProperty(actrule.errorCode)) {
+                        hashmap[actrule.errorCode] += 1;
+                    } else {
+                        hashmap[actrule.errorCode] = 1;
+                    }
+                }
+            }
+            for (const wcagtechnique of webpage.test.wcagtechniques) {
+                if (wcagtechnique.outcome == 'failed') {
+                    if (webpage.test.wcagtechnique && hashmap.hasOwnProperty(wcagtechnique.errorCode)) {
+                        hashmap[wcagtechnique.errorCode] += 1;
+                    } else {
+                        hashmap[wcagtechnique.errorCode] = 1;
+                    }
+                }
+            }
+        }
+    }
+
     let pairs = Object.entries(hashmap);
-
-    // Sort the pairs by value in descending order
     pairs.sort((a, b) => b[1] - a[1]);
-
-    // Get the keys of the top 10 pairs
     let topTenKeys = pairs.slice(0, 10).map(pair => pair[0]);
-
     return topTenKeys;
+}
+
+async function countWebpagesWithErrors(website) {
+    let countA = 0;
+    let countAA = 0;
+    let countAAA = 0;
+    let countAny = 0;
+    let countNone = 0;
+
+    for (const webpageId of website.webpages) {
+        const webpage = await Webpage.findById(webpageId).exec();
+
+        if (webpage) {
+            if (webpage.A > 0) {
+                countA++;
+            }
+            if (webpage.AA > 0) {
+                countAA++;
+            }
+            if (webpage.AAA > 0) {
+                countAAA++;
+            }
+            if (webpage.A > 0 || webpage.AA > 0 || webpage.AAA > 0) {
+                countAny++;
+            } else {
+                countNone++;
+            }
+        }
+    }
+    return {
+        countA: countA,
+        countAA: countAA,
+        countAAA: countAAA,
+        countAny: countAny,
+        countNone: countNone,
+    };
 }
