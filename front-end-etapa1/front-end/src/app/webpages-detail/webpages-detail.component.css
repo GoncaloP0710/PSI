@@ -1,9 +1,32 @@
-button.back {
+button {
     font-size: medium;
+}
+
+button.back {
+    background-color: rgb(223, 223, 223);
     border-style: solid;
     padding: 5px;
     border-radius: 10px;
-    width:170px
+    width:170px;
+}
+
+button.back:active {
+    background-color: rgb(200, 200, 200);
+    transform: scale(0.98);
+}
+
+
+button.apagar {
+    background-color: rgb(249, 74, 74);
+    border-style: solid;
+    position:relative;
+    left:200px;
+    top:55px;
+}
+
+button.apagar:active {
+    background-color: red;
+    transform: scale(0.98);
 }
 
 mat-list {
