@@ -17,6 +17,11 @@ button.apagar {
     top:55px;
 }
 
+button.apagar:active {
+    background-color: red;
+    transform: scale(0.98);
+}
+
 button.adicionar {
     background-color: lightgreen;
     width:90px;
@@ -61,4 +66,12 @@ form {
 
 input {
     width:500px;
+}
+
+mat-list.erros {
+    margin-bottom:20px;
+}
+
+button:active {
+    background-color: aqua;
 }
