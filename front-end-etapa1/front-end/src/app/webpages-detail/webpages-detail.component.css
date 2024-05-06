@@ -6,6 +6,19 @@ button.back {
     width:170px
 }
 
+button.apagar {
+    background-color: rgb(249, 74, 74);
+    border-style: solid;
+    position:relative;
+    left:200px;
+    top:55px;
+}
+
+button.apagar:active {
+    background-color: red;
+    transform: scale(0.98);
+}
+
 mat-list {
     border-top-style: solid;
     line-height: 2;
