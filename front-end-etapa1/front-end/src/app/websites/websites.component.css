@@ -83,6 +83,11 @@ button.adicionar {
   width:90px;
 }
 
+button.adicionar:active {
+  background-color: rgb(110, 218, 110);
+  scale:0.98;
+}
+
 a {
   text-decoration: none;
 }
