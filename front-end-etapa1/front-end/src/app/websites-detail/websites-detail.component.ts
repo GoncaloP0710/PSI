@@ -145,6 +145,7 @@ export class WebsitesDetailComponent {
       response => {
       console.log('Website set to evaluate successfully:', response);
       this.getWebsite(this.id);
+      this.getWebpages();
       this.initializeStats();
       this.website.topTenErrors = response;
     },

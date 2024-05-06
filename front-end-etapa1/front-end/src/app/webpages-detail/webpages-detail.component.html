@@ -3,6 +3,6 @@
 <mat-divider></mat-divider>
 <mat-list>
   <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
-  <mat-list-item role="listitem">Data da última avaliação: {{webpage.lastEvaluationDate?webpage.lastEvaluationDate:"-"}}</mat-list-item>
-  <mat-list-item role="listitem">Conforme: {{webpage.isCompliant?"Sim":"Não"}}</mat-list-item>
+  <mat-list-item role="listitem">Data da última avaliação: {{webpage.dataDaUltimaAvaliacao?webpage.dataDaUltimaAvaliacao:"-"}}</mat-list-item>
+  <mat-list-item role="listitem">Conforme: {{webpage.isCompliant === "Conforme"?"Conforme":"Não Conforme"}}</mat-list-item>
 </mat-list>
