@@ -35,7 +35,8 @@
 <button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação</button>
 <button mat-button (click)="deleteWebpages(wp)" value="">Apagar</button>
 
-<p>Dados da última avaliação</p>
+<mat-divider></mat-divider>
+<h3>Dados da última avaliação</h3>
 
 
   
@@ -68,6 +69,6 @@
   
   <h2>Top 10 erros</h2>
 
-  <mat-list>
+  <mat-list class="erros">
     <mat-list-item *ngFor="let error of website.topTenErrors">{{error}}</mat-list-item>
   </mat-list>
