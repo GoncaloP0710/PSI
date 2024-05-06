@@ -33,6 +33,11 @@ button.adicionar {
     width:90px;
 }
 
+button.adicionar:active {
+    background-color: rgb(110, 218, 110);
+    scale:0.98;
+}
+
 .example-form, .example-full-width {
     width: 100%;
     margin-bottom: 16px;
