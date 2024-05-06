@@ -59,7 +59,7 @@
     <!-- Percentagem Column -->
     <ng-container matColumnDef="Percentagem">
       <th mat-header-cell *matHeaderCellDef> Percentagem </th>
-      <td mat-cell *matCellDef="let element"> {{element.Percentagem}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.Percentagem}} % </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -68,6 +68,6 @@
   
   <h2>Top 10 erros</h2>
 
-  <mat-list *ngFor="let error of website.topTenErrors">
-    <mat-list-item>{{error}}</mat-list-item>
+  <mat-list>
+    <mat-list-item *ngFor="let error of website.topTenErrors">{{error}}</mat-list-item>
   </mat-list>

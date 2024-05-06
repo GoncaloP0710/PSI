@@ -132,7 +132,6 @@ export class WebsitesDetailComponent {
   }
 
   evaluate(selectionList: MatSelectionList) {
-    console.log(this.stats);
     let selectedWebpages:  string[] = [];
     selectionList.selectedOptions.selected.forEach(option => {
       const webpageId = option.value; // Assuming the value of each option is the webpage ID
@@ -145,6 +144,9 @@ export class WebsitesDetailComponent {
     this.websiteService.evaluate(this.website, selectedWebpages).subscribe(
       response => {
       console.log('Website set to evaluate successfully:', response);
+      this.getWebsite(this.id);
+      this.initializeStats();
+      this.website.topTenErrors = response;
     },
     error => {
       console.error('Error evaluating:', error);
