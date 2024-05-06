@@ -66,3 +66,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   
+  <h2>Top 10 erros</h2>
+
+  <mat-list *ngFor="let error of website.topTenErrors">
+    <mat-list-item>{{error}}</mat-list-item>
+  </mat-list>

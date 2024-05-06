@@ -10,7 +10,7 @@ export interface Website {
     countA: string,
     countAA: string,
     countAAA: string,
-    topTenErrors: String,
+    topTenErrors: String[],
     percentageCountA: string,
     percentageCountAA: string,
     percentageCountAAA: string,
