@@ -21,6 +21,8 @@ const errortestSchema = new Schema({
         AA: { type: Number, default: 0 },
         AAA: { type: Number, default: 0 },
     }],
+
+    url: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Errortest', errortestSchema);

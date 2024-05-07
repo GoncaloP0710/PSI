@@ -49,8 +49,15 @@ exports.delete_webpages = asyncHandler(async (req, res, next) => {
         const webpageIds = req.body.webpageIds; // assuming the webpage IDs are sent in the request body
 
         for (const webpageId of webpageIds) {
+
+            // Find the webpage
+            const webpage = await Webpage.findById(webpageId);
+            
             // Find all websites that contain the webpage
             const websites = await Website.find({ webpages: webpageId }).exec();
+
+            // Delete all error pages with the same URL
+            await ErrorPage.deleteMany({ url: webpage.url });
 
             // Update each website to remove the webpage
             for (const website of websites) {

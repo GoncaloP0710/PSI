@@ -155,7 +155,7 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 var AAA = errorCounts.AAA;
                 var actrules = errorCounts.actrules;
                 var wcagtechniques = errorCounts.wcagtechniques;
-                var test = await createErrortest(actrules, wcagtechniques);
+                var test = await createErrortest(actrules, wcagtechniques, webpage.url);
     
                 // Update the webpage document
                 webpage.dataDaUltimaAvaliacao = new Date(),
@@ -321,10 +321,11 @@ async function countLevels(report) {
     }
 }
 
-async function createErrortest(actrules, wcagtechniques) {
+async function createErrortest(actrules, wcagtechniques, url) {
     const errortestDetails= {
         actrules: actrules,
         wcagtechniques: wcagtechniques,
+        url: url,
     };
     console.log(`Error test details`)
     const errortest = await new Errortest(errortestDetails);
