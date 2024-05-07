@@ -207,7 +207,8 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
     website.countAny = countAny;
     website.countNone = countNone;
     website.percentageNone = percentageNone;
-    website
+    website.percentageAny = percentageAny;
+    website.dataDaUltimaAvaliacao = new Date();
 
     await website.save();
 
