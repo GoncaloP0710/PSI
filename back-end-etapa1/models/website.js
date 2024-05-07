@@ -22,6 +22,7 @@ const websiteSchema = new Schema({
   countAny: { type: Number, default: 0 },
   countNone: { type: Number, default: 0 },
   percentageNone: { type: Number, default: 0 },
+  percentageAny: {type: Number, default: 0}
 });
 
 // Export model

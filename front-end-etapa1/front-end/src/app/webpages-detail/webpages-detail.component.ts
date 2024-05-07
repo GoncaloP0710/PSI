@@ -19,6 +19,7 @@ export class WebpagesDetailComponent {
   ngOnInit(): void { 
     const id = String(this.route.snapshot.paramMap.get('id'));
     this.getWebpage(id);
+    
   }
 
   goBack(): void {

@@ -19,8 +19,11 @@ import { MatListOption, MatSelectionList } from '@angular/material/list';
 export class WebsitesDetailComponent {
   website!: Website;
   id!: string;
+  displayedColumns :string[] = ['Descrição', 'Total', 'Percentagem'];
 
-  webpages!: Webpage[];
+  stats!: any[];
+
+  webpages: Webpage[] = [];
 
   urlFormControl = new FormControl('', [
     Validators.required,
@@ -30,6 +33,7 @@ export class WebsitesDetailComponent {
   matcher = new ErrorStateMatcher();
 
   webpageControl = new FormControl('');
+  
 
   constructor(private websiteService: WebsiteService, private route: ActivatedRoute,private location: Location,private webpageService: WebpageService) { } 
 
@@ -37,8 +41,38 @@ export class WebsitesDetailComponent {
     this.id = String(this.route.snapshot.paramMap.get('id'));
     this.getWebsite(this.id);
     this.getWebpages();
+    
   }
 
+  initializeStats(): void {
+    this.stats = [
+      {
+        Descricao: "Páginas sem erros de acessibilidade",
+        Total: this.website.countNone,
+        Percentagem: this.website.percentageNone
+      },
+      {
+        Descricao: "Páginas com pelo menos um erro de acessibilidade",
+        Total: this.website.countAny,
+        Percentagem: this.website.percentageAny
+      },
+      {
+        Descricao: "Páginas com pelo menos um erro de acessibilidade de nível A",
+        Total: this.website.countA,
+        Percentagem: this.website.percentageCountA
+      },
+      {
+        Descricao: "Páginas  com pelo menos um erro de acessibilidade de nível AA",
+        Total: this.website.countAA,
+        Percentagem: this.website.percentageCountAA
+      },
+      {
+        Descricao: "Páginas  com pelo menos um erro de acessibilidade de nível AAA",
+        Total: this.website.countAAA,
+        Percentagem: this.website.percentageCountAAA
+      }
+    ];
+  }
   getWebpages(): void {
     this.webpageService.getWebpages().subscribe(
       webpages => {
@@ -57,7 +91,10 @@ export class WebsitesDetailComponent {
 
   getWebsite(id: string): void {
     this.websiteService.getWebsite(id)
-      .subscribe(website => this.website = website);
+      .subscribe(website => {this.website = website;
+        this.initializeStats();
+      });
+      
   }
 
   deleteWebsite() {
@@ -95,18 +132,22 @@ export class WebsitesDetailComponent {
   }
 
   evaluate(selectionList: MatSelectionList) {
-    let selectedWebpages!:  string[];
+    let selectedWebpages:  string[] = [];
     selectionList.selectedOptions.selected.forEach(option => {
       const webpageId = option.value; // Assuming the value of each option is the webpage ID
       const selectedWebpage = this.website.webpages.find(webpage => webpage._id === webpageId);
       if (selectedWebpage) {
-        selectedWebpages.push(selectedWebpage._id);
+        selectedWebpages.push(option.value);
       }
     });
     this.website.avaliacao = AvaliacaoStatus.EmAvaliacao;
     this.websiteService.evaluate(this.website, selectedWebpages).subscribe(
       response => {
       console.log('Website set to evaluate successfully:', response);
+      this.getWebsite(this.id);
+      this.getWebpages();
+      this.initializeStats();
+      this.website.topTenErrors = response;
     },
     error => {
       console.error('Error evaluating:', error);

@@ -1,25 +1,29 @@
-<button (click)="goBack()">back</button>
-
-<h1>Detalhes de website</h1> <button mat-button (click)="deleteWebsite()" value="">Eliminar Website</button>
+<button (click)="goBack()" class="back">Back to website list</button>
+<button mat-button (click)="deleteWebsite()" value="" class="apagar">Eliminar Website</button>
+<h1>Detalhes de Website</h1>
+<mat-divider></mat-divider>
 
 <mat-list>
   <mat-list-item role="listitem">URL: {{website.url}}</mat-list-item>
-    <mat-list-item role="listitem">Avaliacao: {{website.avaliacao}}</mat-list-item>
+    <mat-list-item role="listitem">Avaliação: {{website.avaliacao}}</mat-list-item>
     <mat-list-item role="listitem">Data de registo: {{website.dataDeRegisto}}</mat-list-item>
   <mat-list-item role="listitem">Data da última avaliação: {{website.dataDaUltimaAvaliacao?website.dataDaUltimaAvaliacao:"-"}}</mat-list-item>
 </mat-list>
 <mat-divider></mat-divider>
-<h4>Webpages</h4>
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher"
-    placeholder="Ex. {{website.url}}/webpage">
-      <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
-      <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
-
-  </mat-form-field>
-  <button mat-button *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
-</form>
+<h4>Add Webpage</h4>
+<section>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input type="url" matInput [formControl]="urlFormControl" [errorStateMatcher]="matcher" placeholder="Ex. {{website.url}}/webpage">
+        <mat-error *ngIf="urlFormControl.hasError('pattern') && !urlFormControl.hasError('required')">A webpage não pertence ao website</mat-error>
+        <mat-error *ngIf="urlFormControl.hasError('required')">É <strong>necessário</strong>URL</mat-error>
+  
+    </mat-form-field>
+  </form>
+  <button mat-button class="adicionar" *ngIf="urlFormControl.valid && urlFormControl.value" (click)="addWebpageToWebsite(website._id, urlFormControl.value)" value="">Adicionar </button>
+</section>
+<mat-divider></mat-divider>
+<h4>Webpage list</h4>
 <mat-selection-list #wp>
   <ng-container *ngFor="let webpage of website.webpages">
     <a routerLink="/webpage/{{webpage._id}}">{{webpage.url}}</a>
@@ -30,3 +34,41 @@
 
 <button mat-button (click)="evaluate(wp)" value="">Inciar Avaliação</button>
 <button mat-button (click)="deleteWebpages(wp)" value="">Apagar</button>
+
+<mat-divider></mat-divider>
+<h3>Dados da última avaliação</h3>
+
+
+  
+  <table mat-table class="mat-elevation-z8" [dataSource]="stats">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Descrição Column -->
+    <ng-container matColumnDef="Descrição" >
+      <th mat-header-cell *matHeaderCellDef> Descrição </th>
+      <td mat-cell *matCellDef="let element"> {{element.Descricao}} </td>
+    </ng-container>
+  
+    <!-- Total Column -->
+    <ng-container matColumnDef="Total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let element"> {{element.Total}} </td>
+    </ng-container>
+  
+    <!-- Percentagem Column -->
+    <ng-container matColumnDef="Percentagem">
+      <th mat-header-cell *matHeaderCellDef> Percentagem </th>
+      <td mat-cell *matCellDef="let element"> {{element.Percentagem}} % </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <h2>Top 10 erros</h2>
+
+  <mat-list class="erros">
+    <mat-list-item *ngFor="let error of website.topTenErrors">{{error}}</mat-list-item>
+  </mat-list>
