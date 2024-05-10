@@ -3,10 +3,10 @@ import { WebsiteService } from '../website.service';
 import { Website, AvaliacaoStatus } from '../website';
 import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { WebpageService } from '../webpage.service';
+import { MatTableDataSource, MatTableDataSourcePaginator } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-websites',
@@ -17,12 +17,16 @@ import { WebpageService } from '../webpage.service';
 
 export class WebsitesComponent implements OnInit {
 
+
   websites!: Website[];
   url: string = '';
   ascendente: boolean = false;
 
-  displayedColumns: string[] = ['URL', "Data de Registo", 'Data da ultima avaliação', 'Avaliação', "Detalhe", "Apagar"];
+  displayedColumns: string[] = ['URL', "dataDeRegisto", 'dataDaUltimaAvaliacao', 'Avaliação', "Detalhe", "Apagar"];
   avalFormControl = new FormControl('');
+
+  dataSource!: MatTableDataSource<Website>;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   avaliacao: string[] = ["Por avaliar", "Em avaliação", "Avaliado", "Erro na avaliação"];
 
@@ -49,6 +53,11 @@ export class WebsitesComponent implements OnInit {
       },
       error => {
         console.error('Error fetching websites:', error);
+      },
+      () => {
+        
+        this.dataSource = new MatTableDataSource<Website>(this.websites);
+        this.dataSource.sort = this.sort;
       }
     );
     console.log("depois do fetch")
@@ -82,8 +91,8 @@ export class WebsitesComponent implements OnInit {
     this.websiteService.deleteWebsite(website._id).subscribe();
   }
 
-  getWebsitesOrdered(sortField: string): void {
-    console.log("sortField: " + sortField);
+  getWebsitesOrdered(sortField: Sort): void {
+    console.log("sortField: " + sortField.active);
     let sortOrder: string;
     if (this.ascendente) {
       sortOrder = 'asc';
@@ -93,13 +102,14 @@ export class WebsitesComponent implements OnInit {
       this.ascendente = true;
     }
     console.log("sortOrder: " + sortOrder);
+    console.log("Sort name " + sortField.active)
 
-    this.websiteService.getOrderedWebsites(sortField, sortOrder)
+    this.websiteService.getOrderedWebsites(sortField.active, sortOrder)
       .subscribe(
         websites => {
           this.websites = websites;
           console.log('Websites ordered:', websites);
-          console.log(`Received ${websites.length} websites sorted by ${sortField} in ${sortOrder} order`);
+          console.log(`Received ${websites.length} websites sorted by ${sortField.active} in ${sortOrder} order`);
         },
         error => {
           console.error('Error occurred:', error);
@@ -111,4 +121,11 @@ export class WebsitesComponent implements OnInit {
     this.websiteService.getWebsitesByAvaliacao(avaliacao)
       .subscribe(websites => this.websites = websites);
   }
+
+  announceSortChange(event: Sort) {
+    console.log('Sort changed:', event);
+    console.log(this.dataSource)
+  }
+
+
 }

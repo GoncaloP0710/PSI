@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 
 import { WebsiteService } from '../website.service'; // Make sure to import WebsiteService
 import { AvaliacaoStatus, Website } from '../website';
-import { OnInit } from '@angular/core'; // Import OnInit
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { WebpageService } from '../webpage.service'; // Make sure to import WebsiteService
 import { Webpage } from '../webpage';
 import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { MatSelectionList } from '@angular/material/list';
 
 @Component({
   selector: 'app-websites-detail',
@@ -166,7 +165,8 @@ export class WebsitesDetailComponent {
     });
     this.webpages = this.webpages.filter(w => !selectedWebpages.includes(w._id));
     this.website.webpages = this.website.webpages.filter(w => !selectedWebpages.includes(w._id));
-    this.webpageService.deleteWebpages(selectedWebpages).subscribe();  
+    this.webpageService.deleteWebpages(selectedWebpages).subscribe(() => {this.getWebsite(this.id);
+      this.initializeStats()});  
   } 
 
 
