@@ -44,3 +44,8 @@ mat-divider {
     border-width: 1px;
     margin-bottom: 20px;
 }
+
+button:focus {
+    border-color: rgba(88, 163, 255, 0.901);
+    color: rgba(88, 163, 255, 0.901);
+}
