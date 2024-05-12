@@ -9,5 +9,6 @@ router.post('/:id/webpages', website_controller.add_webpage);
 router.put('/:id/updateAvaliacao', website_controller.update_avaliacao);
 
 router.post('/:id/evaluate', website_controller.evaluateAndSaveReports);
+router.post('/:id', website_controller.evaluateWebsite);
 
 module.exports = router;

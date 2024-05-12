@@ -415,3 +415,36 @@ async function countWebpagesWithErrors(website) {
         countNone: countNone,
     };
 }
+
+exports.evaluateWebsite = asyncHandler(async (req, res, next) => {
+    const website = await Website.findById(req.params.id).populate('webpages').exec();
+    
+    var top10 = await getTopTen(website);
+    var errorCounts = await countWebpagesWithErrors(website);
+
+    var countA = errorCounts.countA;
+    var countAA = errorCounts.countAA;
+    var countAAA = errorCounts.countAAA;
+    var countAny = errorCounts.countAny;
+    var countNone = errorCounts.countNone;
+
+    var percentageA = countAny ? (countA / countAny) * 100 : 0;
+    var percentageAA = countAny ? (countAA / countAny) * 100 : 0;
+    var percentageAAA = countAny ? (countAAA / countAny) * 100 : 0;
+    var percentageAny = countAny ? (countAny / website.webpages.length) * 100 : 0;
+    var percentageNone = countNone ? (countNone / website.webpages.length) * 100 : 0;
+
+    website.countA = countA;
+    website.countAA = countAA;
+    website.countAAA = countAAA;
+    website.topTenErrors = top10;
+    website.percentageCountA = percentageA;
+    website.percentageCountAA = percentageAA;
+    website.percentageCountAAA = percentageAAA;
+    website.countAny = countAny;
+    website.countNone = countNone;
+    website.percentageNone = percentageNone;
+    website.percentageAny = percentageAny;
+
+    await website.save();
+});
