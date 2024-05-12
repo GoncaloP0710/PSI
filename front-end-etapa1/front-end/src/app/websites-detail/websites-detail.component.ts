@@ -9,6 +9,8 @@ import { Webpage } from '../webpage';
 import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSelectionList } from '@angular/material/list';
+import { SelectionModel } from '@angular/cdk/collections';
+
 
 @Component({
   selector: 'app-websites-detail',
@@ -32,6 +34,9 @@ export class WebsitesDetailComponent {
   matcher = new ErrorStateMatcher();
 
   webpageControl = new FormControl('');
+
+  selection = new SelectionModel<any>(true, []);
+  displayedColumns2: string[] = ['URL', 'Detalhes', 'select'];
   
 
   constructor(private websiteService: WebsiteService, private route: ActivatedRoute,private location: Location,private webpageService: WebpageService) { } 
@@ -130,14 +135,14 @@ export class WebsitesDetailComponent {
   
   }
 
-  evaluate(selectionList: MatSelectionList) {
+  evaluate() {
     let selectedWebpages:  string[] = [];
-    selectionList.selectedOptions.selected.forEach(option => {
-      const webpageId = option.value; // Assuming the value of each option is the webpage ID
+    this.selection.selected.forEach(option => {
+      const webpageId = option._id; // Assuming the value of each option is the webpage
       const selectedWebpage = this.website.webpages.find(webpage => webpage._id === webpageId);
       if (selectedWebpage) {
-        selectedWebpages.push(option.value);
-      }
+        selectedWebpages.push(selectedWebpage._id);
+      } 
     });
     this.website.avaliacao = AvaliacaoStatus.EmAvaliacao;
     this.websiteService.evaluate(this.website, selectedWebpages).subscribe(
@@ -151,22 +156,25 @@ export class WebsitesDetailComponent {
     error => {
       console.error('Error evaluating:', error);
     })
-    
+    this.selection.clear();
   }
 
-  deleteWebpages(selectionList: MatSelectionList) {
+  deleteWebpages() {
     let selectedWebpages:  string[] = [];
-    selectionList.selectedOptions.selected.forEach(option => {
-      const webpageId = option.value; // Assuming the value of each option is the webpage ID
+    this.selection.selected.forEach(option => {
+      const webpageId = option._id; // Assuming the value of each option is the webpage
       const selectedWebpage = this.website.webpages.find(webpage => webpage._id === webpageId);
       if (selectedWebpage) {
         selectedWebpages.push(selectedWebpage._id);
-      }
+      } 
     });
     this.webpages = this.webpages.filter(w => !selectedWebpages.includes(w._id));
     this.website.webpages = this.website.webpages.filter(w => !selectedWebpages.includes(w._id));
-    this.webpageService.deleteWebpages(selectedWebpages).subscribe(() => {this.getWebsite(this.id);
-      this.initializeStats()});  
+    this.webpageService.deleteWebpages(selectedWebpages).subscribe(() => {
+      this.websiteService.updateEval(this.website).subscribe(() => {this.getWebsite(this.id);
+      this.initializeStats()});
+      }); 
+      this.selection.clear();
   } 
 
 

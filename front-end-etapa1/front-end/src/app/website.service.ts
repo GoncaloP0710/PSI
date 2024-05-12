@@ -110,4 +110,12 @@ export class WebsiteService {
       return of(result as T);
     };
   }
+
+  updateEval(website: Website) {
+    const url = `${this.websiteUrl}/${website._id}`;
+    return this.http.post(url, null, this.httpOptions).pipe(
+      tap(),
+      catchError(this.handleError<any>('updateEval'))
+    );
+  }
 }

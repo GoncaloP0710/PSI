@@ -447,4 +447,5 @@ exports.evaluateWebsite = asyncHandler(async (req, res, next) => {
     website.percentageAny = percentageAny;
 
     await website.save();
+    res.json(website);
 });
