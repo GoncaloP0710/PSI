@@ -66,12 +66,12 @@ export class WebsitesDetailComponent {
         Percentagem: this.website.percentageCountA
       },
       {
-        Descricao: "Páginas  com pelo menos um erro de acessibilidade de nível AA",
+        Descricao: "Páginas com pelo menos um erro de acessibilidade de nível AA",
         Total: this.website.countAA,
         Percentagem: this.website.percentageCountAA
       },
       {
-        Descricao: "Páginas  com pelo menos um erro de acessibilidade de nível AAA",
+        Descricao: "Páginas com pelo menos um erro de acessibilidade de nível AAA",
         Total: this.website.countAAA,
         Percentagem: this.website.percentageCountAAA
       }

@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator");
 const URL = require('url').URL;
 
 const { QualWeb, generateEARLReport } = require('@qualweb/core');
+const  PDFDocument  = require('pdfkit');
 const fs = require('fs').promises;
 const fsp = require('fs');
 
@@ -147,8 +148,9 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 // Generate the EARL report JSON file
                 const report = JSON.stringify(evaluation, null, 2);
                 const reportPath = `./reports/${webpageId}.json`;
+                
                 await fs.writeFile(reportPath, report);
-    
+
                 const errorCounts = await countLevels(evaluation);
                 var A = errorCounts.A;
                 var AA = errorCounts.AA;
@@ -156,7 +158,8 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 var actrules = errorCounts.actrules;
                 var wcagtechniques = errorCounts.wcagtechniques;
                 var test = await createErrortest(actrules, wcagtechniques, webpage.url);
-    
+                
+
                 // Update the webpage document
                 webpage.dataDaUltimaAvaliacao = new Date(),
                 webpage.A = A;
@@ -209,6 +212,18 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
     website.percentageNone = percentageNone;
     website.percentageAny = percentageAny;
     website.dataDaUltimaAvaliacao = new Date();
+
+    const doc = new PDFDocument();
+
+    doc.pipe(fsp.createWriteStream('./reports/' + website.id + '.pdf'));
+
+    doc.text('Páginas sem erros de acessibilidade: ' + countNone + ' (' + percentageNone + '%)\n')
+        .text('Páginas com pelo menos um erro de acessibilidade: ' + countAny + ' (' + percentageAny + '%)\n')
+        .text('Páginas com pelo menos um erro de acessibilidade do tipo A: ' + countA + ' (' + percentageA + '%)\n')
+        .text('Páginas com pelo menos um erro de acessibilidade do tipo AA: ' + countAA + ' (' + percentageAA + '%)\n')
+        .text('Páginas com pelo menos um erro de acessibilidade do tipo AAA: ' + countAAA + ' (' + percentageAAA + '%)\n');
+
+    doc.end();
 
     await website.save();
 

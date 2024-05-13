@@ -38,9 +38,10 @@ button.adicionar:active {
     scale:0.98;
 }
 
-mat-checkbox:focus {
+.webpage_select:focus {
     outline: 2px solid rgba(88, 163, 255, 0.901); /* Change the color and thickness of the outline */
     outline-offset: 2px; /* Adjust the offset of the outline */
+    border-style: solid ;
 }
 
 .example-form, .example-full-width {
