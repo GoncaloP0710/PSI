@@ -157,6 +157,18 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 var AAA = errorCounts.AAA;
                 var actrules = errorCounts.actrules;
                 var wcagtechniques = errorCounts.wcagtechniques;
+
+                const { counts, percentages } = countOutcomes(errorCounts);
+                var total = counts.total;
+                var passed = counts.passed;
+                var inapplicable = counts.inapplicable;
+                var warning = counts.warning;
+                var failed = counts.failed;
+                var percentagePassed = percentages.passed;
+                var percentageInapplicable = percentages.inapplicable;
+                var percentageWarning = percentages.warning;
+                var percentageFailed = percentages.failed;
+
                 var test = await createErrortest(actrules, wcagtechniques, webpage.url);
                 
 
@@ -166,6 +178,14 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 webpage.AA = AA;
                 webpage.AAA = AAA;
                 webpage.test = test;
+                webpage.passed = passed;
+                webpage.inapplicable = inapplicable;
+                webpage.warning = warning;
+                webpage.failed = failed;
+                webpage.percentagePassed = percentagePassed;
+                webpage.percentageInapplicable = percentageInapplicable;
+                webpage.percentageWarning = percentageWarning;
+                webpage.percentageFailed = percentageFailed;
 
                 if (A > 0 || AA > 0) {
                     webpage.avaliacao = 'Não conforme';
@@ -174,7 +194,6 @@ exports.evaluateAndSaveReports = asyncHandler(async (req, res, next) => {
                 }
 
                 await webpage.save();
-
             }
         }
     } catch (error) {
@@ -262,21 +281,26 @@ async function countLevels(report) {
             for (const [assertionKey, assertionValue] of Object.entries(moduleValue.assertions)) {
 
                 const errorCode = assertionValue.code;
-                // const results = assertionValue.results;
-                // var resultsTupleList = [];
 
-                // for (const [resultKey, resultValue] of Object.entries(results)) {
+                // =================================================================================
 
-                //     const code = resultValue.resultCode;
+                const results = assertionValue.results;
+                var resultsTupleList = [];
 
-                //     const elements = resultValue.elements;
-                //     for (const [elementKey, elementValue] of Object.entries(elements)) {
-                //         const htmlCode = elementValue.htmlCode;
-                //         const pointer = elementValue.pointer;
+                for (const [resultKey, resultValue] of Object.entries(results)) {
 
-                //         resultsTupleList.push({ htmlCode: htmlCode, pointer: pointer });
-                //     }
-                // }
+                    const code = resultValue.resultCode;
+
+                    const elements = resultValue.elements;
+                    for (const [elementKey, elementValue] of Object.entries(elements)) {
+                        const htmlCode = elementValue.htmlCode;
+                        const pointer = elementValue.pointer;
+
+                        resultsTupleList.push({ htmlCode: htmlCode, pointer: pointer });
+                    }
+                }
+
+                // =================================================================================
 
                 const metadata = assertionValue.metadata;
                 const outcome = metadata.outcome;
@@ -315,6 +339,7 @@ async function countLevels(report) {
                     A: A,
                     AA: AA,
                     AAA: AAA,
+                    resultsTupleList: resultsTupleList,
                 };
                 
                 if (moduleName === 'act-rules') {
@@ -331,6 +356,7 @@ async function countLevels(report) {
             AAA: AAATOTAL,
             actrules: actrules,
             wcagtechniques: wcagtechniques,
+            resultsTupleList: resultsTupleList,
         };
 
     } catch (err) {
@@ -464,3 +490,35 @@ exports.evaluateWebsite = asyncHandler(async (req, res, next) => {
     await website.save();
     res.json(website);
 });
+
+function countOutcomes(errortest) {
+    const outcomes = ['passed', 'inapplicable', 'warning', 'failed'];
+    const counts = {
+        total: 0,
+        passed: 0,
+        inapplicable: 0,
+        warning: 0,
+        failed: 0
+    };
+    const percentages = {
+        passed: 0,
+        inapplicable: 0,
+        warning: 0,
+        failed: 0
+    };
+
+    const allTests = [...errortest.actrules, ...errortest.wcagtechniques];
+    counts.total = allTests.length;
+
+    for (const test of allTests) {
+        if (outcomes.includes(test.outcome)) {
+            counts[test.outcome]++;
+        }
+    }
+
+    for (const outcome of outcomes) {
+        percentages[outcome] = (counts[outcome] / counts.total) * 100;
+    }
+
+    return { counts, percentages };
+}

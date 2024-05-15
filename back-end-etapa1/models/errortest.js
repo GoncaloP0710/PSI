@@ -11,6 +11,10 @@ const errortestSchema = new Schema({
         A: { type: Number, default: 0 },
         AA: { type: Number, default: 0 },
         AAA: { type: Number, default: 0 },
+        resultsTupleList: [{
+            htmlCode: { type: String, required: true },
+            pointer: { type: String, required: true },
+        }],
     }],
 
     wcagtechniques: [{
@@ -20,9 +24,15 @@ const errortestSchema = new Schema({
         A: { type: Number, default: 0 },
         AA: { type: Number, default: 0 },
         AAA: { type: Number, default: 0 },
+        resultsTupleList: [{
+            htmlCode: { type: String, required: true },
+            pointer: { type: String, required: true },
+        }],
     }],
 
     url: { type: String, required: true },
+
+
 });
 
 module.exports = mongoose.model('Errortest', errortestSchema);
