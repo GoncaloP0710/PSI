@@ -1,9 +1,35 @@
 <button (click)="goBack()" class="back">Back to website</button>
-<button mat-button value="" class="apagar">Eliminar Webpage</button>
+<button mat-button value="" class="apagar" (click)="deleteWebpage()">Eliminar Webpage</button>
 <h1>Detalhes de Webpage</h1>
 <mat-divider></mat-divider>
 <mat-list>
   <mat-list-item role="listitem">URL: {{webpage.url}}</mat-list-item>
   <mat-list-item role="listitem">Data da última avaliação: {{webpage.dataDaUltimaAvaliacao?webpage.dataDaUltimaAvaliacao:"-"}}</mat-list-item>
   <mat-list-item role="listitem">Conforme: {{webpage.isCompliant === "Conforme"?"Conforme":"Não Conforme"}}</mat-list-item>
+  <mat-list-item role="listitem">Número de erros do tipo A: {{webpage.A}}</mat-list-item>
+  <mat-list-item role="listitem">Número de erros do tipo AA: {{webpage.AA}}</mat-list-item>
+  <mat-list-item role="listitem">Número de erros do tipo AAA: {{webpage.AAA}}</mat-list-item>
 </mat-list>
+
+<table mat-table [dataSource]="stats" class="mat-elevation-z8">
+
+  <ng-container  matColumnDef="Descricao">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element"> {{element.Descricao}} </td>
+  </ng-container>
+
+  <ng-container  matColumnDef="Total">
+    <th mat-header-cell *matHeaderCellDef>Total</th>
+    <td mat-cell *matCellDef="let element"> {{element.Total}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Percentagem">
+    <th mat-header-cell *matHeaderCellDef>Percentagem</th>
+    <td mat-cell *matCellDef="let element"> {{element.Percentagem}}%  </td>
+  </ng-container>
+
+  
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

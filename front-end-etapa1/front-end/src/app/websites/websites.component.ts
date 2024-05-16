@@ -122,10 +122,5 @@ export class WebsitesComponent implements OnInit {
       .subscribe(websites => this.websites = websites);
   }
 
-  announceSortChange(event: Sort) {
-    console.log('Sort changed:', event);
-    console.log(this.dataSource)
-  }
-
 
 }
