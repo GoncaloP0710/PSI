@@ -1,10 +1,10 @@
 button {
     font-size: medium;
+    border-style: solid;
 }
 
 button.back {
     background-color: rgb(223, 223, 223);
-    border-style: solid;
     padding: 5px;
     border-radius: 10px;
     width:170px;
@@ -17,7 +17,6 @@ button.back:active {
 
 button.apagar {
     background-color: rgb(249, 74, 74);
-    border-style: solid;
     position:relative;
     left:200px;
     top:55px;
@@ -83,6 +82,31 @@ form {
 
 input {
     width:500px;
+}
+
+.webpage_list_buttons {
+    width:150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.webpage_list_buttons#avaliar {
+    background-color: lightgreen;
+}
+
+.webpage_list_buttons#avaliar:active {
+    background-color: rgb(110, 218, 110);
+    scale:0.98;
+}
+
+.webpage_list_buttons#apagar {
+    margin-left: 10px;
+    background-color: rgb(249, 74, 74);
+}
+
+.webpage_list_buttons#apagar:active {
+    background-color: red;
+    transform: scale(0.98);
 }
 
 mat-list.erros {
