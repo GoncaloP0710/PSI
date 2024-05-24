@@ -31,6 +31,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+Filtrar por:
 
 <section class="Module">
   <mat-radio-group [(ngModel)]="filters.module" (change)="filterTests()">
