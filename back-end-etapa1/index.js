@@ -5,7 +5,7 @@ app.use(cors())
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const con_string = "mongodb+srv://goncalopinto07102003:Y24OQFKGUftnYECB@cluster0.wxmwzsu.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0"
+const con_string = "mongodb://psi036:psi036@localhost:27017/psi036?retryWrites=true&authSource=psi036"
 mongoose.connect(con_string);
 
 mongoose.connection.on('connected', function() {
@@ -35,4 +35,4 @@ app.get('/', (req, res) => {
   res.send('Home Page.');
 });
 
-app.listen(8000);
+app.listen(3036);

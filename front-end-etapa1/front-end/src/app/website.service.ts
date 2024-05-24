@@ -12,8 +12,8 @@ import { Webpage } from './webpage';
 @Injectable({ providedIn: 'root' })
 export class WebsiteService {
 
-  private websiteUrl = 'http://localhost:8000/website';
-  private websitesUrl = 'http://localhost:8000/websites';
+  private websiteUrl = 'http://appserver.alunos.di.fc.ul.pt:3036/website';
+  private websitesUrl = 'http://appserver.alunos.di.fc.ul.pt:3036/websites';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -59,7 +59,7 @@ export class WebsiteService {
   }
 
   addWebpage(websiteId: string, webpageId: string): Observable<any> {
-    const url = `http://localhost:8000/website/${websiteId}/webpages`;
+    const url = `http://appserver.alunos.di.fc.ul.pt:3036/website/${websiteId}/webpages`;
     const body = { webpageId };
   
     return this.http.post(url, body);
