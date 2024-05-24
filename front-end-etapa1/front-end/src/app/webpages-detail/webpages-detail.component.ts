@@ -121,11 +121,8 @@ export class WebpagesDetailComponent {
         filters.actrules = true;
         filters.wcagTechnique = true;
     }
-    console.log(filters);
     this.webpageService.filterTests(this.webpage, filters.actrules, filters.wcagTechnique, filters.result,
       filters.AFilter, filters.AAFilter, filters.AAAFilter
-    ).subscribe(filteredTest => {this.webpage.test = filteredTest;
-      console.log(filteredTest);}
-    );
+    ).subscribe(filteredTest => this.webpage.test = filteredTest);
   }
 }

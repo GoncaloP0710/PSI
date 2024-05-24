@@ -100,25 +100,11 @@ exports.filter_webpage_tests = asyncHandler(async (req, res, next) => {
 });
 
 function filterTest(test, actrules, wcagtechniques, resultFilter, AFilter, AAFilter, AAAFilter) {
-
-    if (resultFilter === "not selected") {
-        // Filter actrules
-        const filteredActRules1 = actrules ? test.actrules.filter((AFilter ? rule.A > 0 : true) && (AAFilter ? rule.AA > 0 : true) && (AAAFilter ? rule.AAA > 0 : true)) : [];
-
-        // Filter wcagtechniques
-        const filteredWcagTechniques1 = wcagtechniques ? test.wcagtechniques.filter((AFilter ? technique.A > 0 : true) && (AAFilter ? technique.AA > 0 : true) && (AAAFilter ? technique.AAA > 0 : true)) : [];
-
-        // Return filtered actrules and wcagtechniques
-        return {
-            actrules: filteredActRules1,
-            wcagtechniques: filteredWcagTechniques1
-        };
-    }
     // Filter actrules
-    const filteredActRules = actrules ? test.actrules.filter(rule => rule.outcome === resultFilter && (AFilter ? rule.A > 0 : true) && (AAFilter ? rule.AA > 0 : true) && (AAAFilter ? rule.AAA > 0 : true)) : [];
+    const filteredActRules = actrules ? test.actrules.filter(rule => (resultFilter === "not selected" || rule.outcome === resultFilter) && ((AFilter ? rule.A > 0 : true) && (AAFilter ? rule.AA > 0 : true) && (AAAFilter ? rule.AAA > 0 : true) || AFilter && AAFilter && AAAFilter)) : [];
 
     // Filter wcagtechniques
-    const filteredWcagTechniques = wcagtechniques ? test.wcagtechniques.filter(technique => technique.outcome === resultFilter && (AFilter ? technique.A > 0 : true) && (AAFilter ? technique.AA > 0 : true) && (AAAFilter ? technique.AAA > 0 : true)) : [];
+    const filteredWcagTechniques = wcagtechniques ? test.wcagtechniques.filter(technique => (resultFilter === "not selected" || technique.outcome === resultFilter) && ((AFilter ? technique.A > 0 : true) && (AAFilter ? technique.AA > 0 : true) && (AAAFilter ? technique.AAA > 0 : true) || AFilter && AAFilter && AAAFilter )) : [];
 
     // Return filtered actrules and wcagtechniques
     return {
