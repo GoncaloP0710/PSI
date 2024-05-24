@@ -4,15 +4,14 @@ import { Webpage } from '../webpage';
 import { OnInit } from '@angular/core'; // Import OnInit
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { response } from 'express';
 
 
 interface Filter {
-  actRules: boolean;
-  wcagTechique: boolean;
-  AFilter: boolean;
-  AAFilter: boolean;
-  AAAFilter: boolean;
+  module: string;
+  conformLevel: string;
   result: string;
+
 }
 
 @Component({
@@ -30,12 +29,9 @@ export class WebpagesDetailComponent {
 
 
   filters: Filter = {
-    actRules: false,
-    wcagTechique: false,
-    AFilter: false,
-    AAFilter: false,
-    AAAFilter: false,
-    result: ""
+    module: "0",
+    conformLevel: "0",
+    result: "not selected"
   };
   
 
@@ -89,17 +85,47 @@ export class WebpagesDetailComponent {
   }
 
   filterTests() {
+    
     const filters = {
-      actrules: this.filters.actRules,
-      wcagTechnique: this.filters.wcagTechique,
-      AFilter: this.filters.AFilter,
-      AAFilter: this.filters.AAFilter,
-      AAAFilter: this.filters.AAAFilter,
+      actrules: false,
+      wcagTechnique: false,
+      AFilter: false,
+      AAFilter: false,
+      AAAFilter: false,
       result: this.filters.result
     };
+    switch(this.filters.conformLevel) {
+      case "1":
+        filters.AFilter = true;
+        break;
+      case "2":
+        filters.AAFilter = true;
+        break;
+      case "3":
+        filters.AAAFilter = true;
+        break;
+      default:
+        filters.AFilter = true;
+        filters.AAFilter = true;
+        filters.AAAFilter = true;
+    }
 
+    switch(this.filters.module) {
+      case "1":
+        filters.actrules = true;
+        break;
+      case "2":
+        filters.wcagTechnique = true;
+        break;
+      default:
+        filters.actrules = true;
+        filters.wcagTechnique = true;
+    }
+    console.log(filters);
     this.webpageService.filterTests(this.webpage, filters.actrules, filters.wcagTechnique, filters.result,
       filters.AFilter, filters.AAFilter, filters.AAAFilter
-    ).subscribe(test => this.webpage.test = test);
+    ).subscribe(filteredTest => {this.webpage.test = filteredTest;
+      console.log(filteredTest);}
+    );
   }
 }

@@ -90,7 +90,7 @@ export class WebpageService {
     resultFilter: string, AFilter:boolean, AAFilter: boolean, AAAFilter:boolean
   ) {
     const url = `${this.webpageUrl}/${webpage._id}/filter`;
-    const body = {actrules, wcagtechniques, resultFilter, AFilter, AAFilter, AAAFilter};
+    const body = {actrules, wcagtechniques, resultFilter, AFilter, AAFilter, AAAFilter} ;
 
     return this.http.post(url, body, this.httpOptions).pipe(
       tap(),

@@ -33,19 +33,28 @@
 </table>
 
 <section class="Module">
-  <mat-checkbox [(ngModel)]="filters.actRules" (change)="filterTests()">Regra ACT</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.wcagTechique" (change)="filterTests()">Técnica WCAG</mat-checkbox>
+  <mat-radio-group [(ngModel)]="filters.module" (change)="filterTests()">
+    <mat-radio-button value="1">Regra ACT</mat-radio-button>
+    <mat-radio-button value="2">Técnica WCAG</mat-radio-button>
+    <mat-radio-button value="0">Todos</mat-radio-button>
+  </mat-radio-group>
 </section>
 <section class="Coforme">
-  <mat-checkbox [(ngModel)]="filters.AFilter" (change)="filterTests()">A</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.AAFilter" (change)="filterTests()">AA</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.AAAFilter" (change)="filterTests()">AAA</mat-checkbox>
+  <mat-radio-group  [(ngModel)]="filters.conformLevel" (change)="filterTests()">
+    <mat-radio-button value="1">A</mat-radio-button>
+    <mat-radio-button value="2">AA</mat-radio-button>
+    <mat-radio-button value="3">AAA</mat-radio-button>
+    <mat-radio-button value="0">Todos</mat-radio-button>
+  </mat-radio-group>
 </section>
 <section class="Result">
-  <mat-checkbox [(ngModel)]="filters.result" value="Passado" (change)="filterTests()">Passado</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.result" value="Aviso" (change)="filterTests()">Aviso</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.result" value="Falhado" (change)="filterTests()">Falhado</mat-checkbox>
-  <mat-checkbox [(ngModel)]="filters.result" value="Não aplicável" (change)="filterTests()">Não aplicável</mat-checkbox>
+  <mat-radio-group [(ngModel)]="filters.result" (change)="filterTests()">
+    <mat-radio-button value="passed">Passado</mat-radio-button>
+    <mat-radio-button value="warning">Aviso</mat-radio-button>
+    <mat-radio-button value="failed">Falhado</mat-radio-button>
+    <mat-radio-button value="inapplicable">Não aplicável</mat-radio-button>
+    <mat-radio-button value="not selected">Todos</mat-radio-button>
+  </mat-radio-group>
 </section>
 
 
