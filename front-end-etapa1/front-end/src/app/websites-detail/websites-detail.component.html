@@ -60,8 +60,8 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
 </table>
 
-<button mat-button (click)="evaluate()" value="">Iniciar Avaliação</button>
-<button mat-button (click)="deleteWebpages()" value="">Apagar</button>
+<button mat-button class="webpage_list_buttons" id="avaliar" (click)="evaluate()" value="">Iniciar Avaliação</button>
+<button mat-button class="webpage_list_buttons" id="apagar" (click)="deleteWebpages()" value="">Apagar</button>
 
 <mat-divider></mat-divider>
 <h3>Dados da última avaliação</h3>
