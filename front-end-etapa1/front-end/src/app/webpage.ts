@@ -1,3 +1,5 @@
+import { ErrorTest } from "./errortest";
+
 export interface Webpage {
   _id: string;
   url: string;
@@ -6,7 +8,7 @@ export interface Webpage {
   A: number,
   AA: number,
   AAA: number,
-  //test: { type: Schema.Types.ObjectId, ref: "Errortest", required: false },
+  test: ErrorTest,
   passed: number,
   inapplicable: number,
   warning: number,

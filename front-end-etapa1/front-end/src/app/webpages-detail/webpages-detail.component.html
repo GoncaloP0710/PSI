@@ -33,3 +33,22 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+
+<mat-list *ngFor="let test of webpage.test.actrules">
+  <mat-list-item> {{test.moduleName}} </mat-list-item>
+  <mat-list-item>{{test.A}}</mat-list-item>
+  <mat-list-item>{{test.AA}}</mat-list-item>
+  <mat-list-item>{{test.AA}}</mat-list-item>
+  <mat-list-item>{{test.errorCode}}</mat-list-item>
+  <mat-list-item>{{test.outcome}}</mat-list-item>
+</mat-list>
+
+<mat-list *ngFor="let test of webpage.test.actrules">
+  <mat-list-item>{{test.moduleName}}</mat-list-item>:
+  <mat-list-item>{{test.A}}</mat-list-item>
+  <mat-list-item>{{test.AA}}</mat-list-item>
+  <mat-list-item>{{test.AA}}</mat-list-item>
+  <mat-list-item>{{test.errorCode}}</mat-list-item>
+  <mat-list-item>{{test.outcome}}</mat-list-item>
+</mat-list>

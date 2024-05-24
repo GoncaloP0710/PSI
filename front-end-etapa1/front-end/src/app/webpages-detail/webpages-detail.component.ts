@@ -64,4 +64,8 @@ export class WebpagesDetailComponent {
     this.webpageService.deleteWebpages(id).subscribe(); 
     this.goBack();
   }
+
+  // filterTests() {
+  //   this.webpageService.filterTests(this.webpage).subscribe();
+  // }
 }
