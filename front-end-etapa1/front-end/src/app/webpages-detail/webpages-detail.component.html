@@ -28,11 +28,25 @@
     <td mat-cell *matCellDef="let element"> {{element.Percentagem}}%  </td>
   </ng-container>
 
-  
-
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<section class="Module">
+  <mat-checkbox [(ngModel)]="filters.actRules" (change)="filterTests()">Regra ACT</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.wcagTechique" (change)="filterTests()">Técnica WCAG</mat-checkbox>
+</section>
+<section class="Coforme">
+  <mat-checkbox [(ngModel)]="filters.AFilter" (change)="filterTests()">A</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.AAFilter" (change)="filterTests()">AA</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.AAAFilter" (change)="filterTests()">AAA</mat-checkbox>
+</section>
+<section class="Result">
+  <mat-checkbox [(ngModel)]="filters.result" value="Passado" (change)="filterTests()">Passado</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.result" value="Aviso" (change)="filterTests()">Aviso</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.result" value="Falhado" (change)="filterTests()">Falhado</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filters.result" value="Não aplicável" (change)="filterTests()">Não aplicável</mat-checkbox>
+</section>
 
 
 <mat-list *ngFor="let test of webpage.test.actrules">

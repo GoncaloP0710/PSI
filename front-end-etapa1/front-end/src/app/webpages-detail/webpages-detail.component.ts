@@ -5,16 +5,39 @@ import { OnInit } from '@angular/core'; // Import OnInit
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
+
+interface Filter {
+  actRules: boolean;
+  wcagTechique: boolean;
+  AFilter: boolean;
+  AAFilter: boolean;
+  AAAFilter: boolean;
+  result: string;
+}
+
 @Component({
   selector: 'app-webpages-detail',
   templateUrl: './webpages-detail.component.html',
   styleUrls: ['./webpages-detail.component.css']
 })
+
+
 export class WebpagesDetailComponent {
 
   webpage!: Webpage;
   stats!: any[];
   displayedColumns: string[] = ['Descricao','Total','Percentagem'];
+
+
+  filters: Filter = {
+    actRules: false,
+    wcagTechique: false,
+    AFilter: false,
+    AAFilter: false,
+    AAAFilter: false,
+    result: ""
+  };
+  
 
   constructor(private webpageService: WebpageService, private route: ActivatedRoute,private location: Location,) { } 
 
@@ -65,7 +88,18 @@ export class WebpagesDetailComponent {
     this.goBack();
   }
 
-  // filterTests() {
-  //   this.webpageService.filterTests(this.webpage).subscribe();
-  // }
+  filterTests() {
+    const filters = {
+      actrules: this.filters.actRules,
+      wcagTechnique: this.filters.wcagTechique,
+      AFilter: this.filters.AFilter,
+      AAFilter: this.filters.AAFilter,
+      AAAFilter: this.filters.AAAFilter,
+      result: this.filters.result
+    };
+
+    this.webpageService.filterTests(this.webpage, filters.actrules, filters.wcagTechnique, filters.result,
+      filters.AFilter, filters.AAFilter, filters.AAAFilter
+    ).subscribe(test => this.webpage.test = test);
+  }
 }
